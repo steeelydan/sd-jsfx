@@ -1,0 +1,21 @@
+desc:#SD Echo
+
+slider1:120 <0, 1000, 1>Length [ms]
+
+@slider
+// ms to samples
+echolength = slider1 / 1000 * srate;
+
+@sample
+// put current sample into buffer
+bufpos[0] = spl0;
+// increment bufpos for current sample
+bufpos += 1;
+// if bufpos has reached echo length: reset to start
+bufpos > echolength ? bufpos = 0;
+
+// bufpos[0] points to sample we stored echolength samples ago
+spl0 = spl0 + bufpos[0];
+
+// make mono
+spl1 = spl0;

@@ -1,0 +1,6 @@
+desc:#SD Channel Swap
+
+@sample
+tmp = spl0;
+spl0 = spl1;
+spl1 = tmp;
