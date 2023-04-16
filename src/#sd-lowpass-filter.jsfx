@@ -1,2 +1,16 @@
 desc:#SD Lowpass Filter
 
+slider1:1000<20,20000>Frequency (Hz)
+
+@slider
+  cut_lp = slider1*2 / (srate);
+
+@sample
+
+n3=n3+cut_lp*(spl0-n3);
+n4=n4+cut_lp*(n3-n4);
+spl0=n4;
+
+rn3=rn3+cut_lp*(spl1-rn3);
+rn4=rn4+cut_lp*(rn3-rn4);
+spl1=rn4;
