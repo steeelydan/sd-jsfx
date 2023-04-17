@@ -1,7 +1,4 @@
-desc:#SD Lowpass Filter 2
-
-// https://www.youtube.com/watch?v=WR8PtyfLAVc
-// Inifinite Impulse Response filter (IIRF)
+desc:#SD Highpass Filter 2
 
 slider1: 1 <0, 1, 0.01> Previous vs. current
 
@@ -19,8 +16,8 @@ lCurrTerm = spl0 * (1 + currVsPrev);
 rCurrTerm = spl1 * (1 + currVsPrev);
 lPrevTerm = previous1L * (1 - currVsPrev);
 rPrevTerm = previous1R * (1 - currVsPrev);
-averageL = (lCurrTerm + lPrevTerm) / 2;
-averageR = (rCurrTerm + rPrevTerm) / 2;
+averageL = (lCurrTerm - lPrevTerm) / 2;
+averageR = (rCurrTerm - rPrevTerm) / 2;
 
 spl0 = averageL;
 spl1 = averageR;
