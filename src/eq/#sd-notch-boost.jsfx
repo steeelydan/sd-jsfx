@@ -1,0 +1,30 @@
+desc:#SD Notch Boost
+
+// https://www.youtube.com/watch?v=WR8PtyfLAVc
+// Inifinite Impulse Response filter (IIRF)
+
+slider1: 1 <0, 1, 0.01> Previous vs. current
+
+@init
+previous1L = 0;
+previous1R = 0;
+previous2L = 0;
+previous2R = 0;
+
+@slider
+currVsPrev = (slider1 * 2) -1;
+
+@sample
+lCurrTerm = spl0 * (1 + currVsPrev);
+rCurrTerm = spl1 * (1 + currVsPrev);
+lPrevTerm = previous2L * (1 - currVsPrev);
+rPrevTerm = previous2R * (1 - currVsPrev);
+averageL = (lCurrTerm - lPrevTerm) / 2;
+averageR = (rCurrTerm - rPrevTerm) / 2;
+
+spl0 = averageL;
+spl1 = averageR;
+previous2L = previous1L;
+previous2R = previous1R;
+previous1L = spl0;
+previous1R = spl1;
