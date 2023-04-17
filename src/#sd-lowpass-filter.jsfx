@@ -1,5 +1,7 @@
 desc:#SD Lowpass Filter
 
+// Copied from Cockos' Resonant Lowpass Filter
+
 slider1:1000<20,20000>Frequency (Hz)
 
 @slider

@@ -1,0 +1,19 @@
+desc:#SD Algo IIRF (Lowpass)
+
+// https://www.youtube.com/watch?v=HexzW0EZal8
+// Inifinite Impulse Response filter (IIRF)
+
+@sample
+average = (spl0 + previous) / 2;
+spl0 = spl1 = average;
+previous = spl0;
+
+// stereo
+
+// @sample
+// averageL = (spl0 + previousL) / 2;
+// averageR = (spl1 + previousR) / 2;
+// spl0 = averageL;
+// spl1 = averageR;
+// previousL = spl0;
+// previousR = spl1;

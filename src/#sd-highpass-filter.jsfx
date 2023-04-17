@@ -1,0 +1,9 @@
+desc:#SD Highpass Filter
+
+// @sample
+averageL = (spl0 - previousL) / 2;
+averageR = (spl1 - previousR) / 2;
+spl0 = averageL;
+spl1 = averageR;
+previousL = spl0;
+previousR = spl1;
