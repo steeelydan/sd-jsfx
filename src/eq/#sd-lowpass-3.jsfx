@@ -1,0 +1,38 @@
+desc:#SD Lowpass Filter 3
+
+/*
+Tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
+Specification: https://www.w3.org/TR/audio-eq-cookbook/
+*/
+
+slider1:freq=300 <20, 20000, 1>Freq 1 [Hz]
+slider2:gain=0 <-96, 12, 0.01>Gain 1 [dB]
+slider3:q=1 <0.1, 7, 0.01>Q 1
+
+@slider
+
+A1 = sqrt(10 ^ (gain / 20));
+omega = 2 * $pi * freq / srate;
+sinOmega = sin(omega);
+cosOmega = cos(omega);
+alpha = sinOmega / (2 * q);
+beta = sqrt(A) / q;
+
+@sample
+
+b0 = (1 - cosOmega) / 2;
+b1 = 1 - cosOmega;
+b2 = (1 - cosOmega) / 2;
+a0 = 1 + alpha;
+a1 = -2 * cosOmega;
+a2 = 1 - alpha;
+
+y_n_2 = y_n_1;
+y_n_1 = y_n;
+y_n = (b0 / a0) * x_n + (b1 / a0) * x_n_1 + (b2 / a0) * x_n_2 - (a1 / a0) * y_n_1 - (a2 / a0) * y_n_2;
+
+x_n_2 = x_n_1;
+x_n_1 = x_n;
+x_n = spl0;
+
+spl0 = spl1 = y_n;

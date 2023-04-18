@@ -1,9 +1,9 @@
 desc:#SD Compressor
 
 slider1: -10 <-72, 6, 0.1>Threshold [dB]
-slider2: 2 <1, 10, 0.01>Ratio
-slider3: 5 <0.1, 100, 0.1>Attack [ms]
-slider4: 50 <1, 500, 1>Release [ms]
+slider2: ratio=2 <1, 10, 0.01>Ratio
+slider3: attacksetting=5 <0.004, 100, 0.1>Attack [ms]
+slider4: releasesetting=50 <1, 500, 1>Release [ms]
 slider5: 0 <0, 24 , 0.1> Makeup [dB]
 
 
@@ -12,9 +12,6 @@ gain = 1;
 
 @slider
 thresh = 10 ^ (slider1 / 20);
-ratio = slider2;
-attacksetting = slider3;
-releasesetting = slider4;
 makeup = 10 ^ (slider5 / 20);
 
 // ~2000 dB/Sec
@@ -27,7 +24,7 @@ release = 10 ^ ((6 * (100 / releasesetting ) / srate) / 20);
 maxsamples = max(abs(spl0), abs(spl1));
 
 // Check if about threshold, if about threshold,
-// set 'seekgain' so the threshold and ratio settings entered by the user 
+// set 'seekgain' so the threshold and ratio settings entered by the user
 // are met, and if not over threshold, set 'seekgain' to 1 (=0dB).
 maxsamples > thresh ?
     (
@@ -35,9 +32,9 @@ maxsamples > thresh ?
     ) : (
         seekgain = 1
     );
-    
+
 // Make 'gain' follow 'seekgain' with the specified
-// attack and release speed: 
+// attack and release speed:
 gain > seekgain ? ( gain /= attack; ) : ( gain *= release; );
 
 // Todo display

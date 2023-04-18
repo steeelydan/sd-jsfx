@@ -1,6 +1,6 @@
 desc:#SD Pitch Shift
 
-slider1:1<0.0833333333, 5, 0.0833333333>Pitch (st)  
+slider1: pitch=1<0.0833333333, 5, 0.0833333333>Pitch (st)
 
 @sample
 blen = srate/8;
@@ -9,7 +9,7 @@ bpos[0]=spl0;
 bpos[blen]=spl1;
 
 // Modify position in buffer by pitch to change speed
-spl0 = (bpos * slider1)[-floor(bpos * slider1 / blen) * blen];
-spl1 = (bpos * slider1)[-floor(bpos * slider1 / blen) * blen + blen];
+spl0 = (bpos * pitch)[-floor(bpos * pitch / blen) * blen];
+spl1 = (bpos * pitch)[-floor(bpos * pitch / blen) * blen + blen];
 
 (bpos += 1) >= blen ? bpos = 0;

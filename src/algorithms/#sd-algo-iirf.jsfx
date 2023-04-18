@@ -11,9 +11,9 @@ spl0 = spl1 = average;
 // stereo
 
 // @sample
-// averageL = (spl0 + previousL) / 2;
-// averageR = (spl1 + previousR) / 2;
+// currAvgL = (spl0 + previousL) / 2;
+// currAvgR = (spl1 + previousR) / 2;
 // previousL = spl0;
 // previousR = spl1;
-// spl0 = averageL;
-// spl1 = averageR;
+// spl0 = currAvgL;
+// spl1 = currAvgR;

@@ -1,20 +1,10 @@
 // (C) 2023, Steeely Dan.
 
 desc:#SD Simple Volume
-//tags: volume
-//author: Steeely Dan
 
-slider1:.5<0,1,.01>Volume (%)
-
-in_pin:left input
-in_pin:right input
-out_pin:left output
-out_pin:right output
-
-@slider
-x=slider1;
+slider1: vol=.5<0, 1, .01>Volume (%)
 
 @sample
-spl0 *= x;
-spl1 *= x;
+spl0 *= vol;
+spl1 *= vol;
 
