@@ -1,4 +1,4 @@
-desc:#SD Limiter
+desc:sd_limiter
 
 slider1: 0 <-72, 0, 0.1> Threshold [dB]
 slider2: 0 <0, 24 , 0.1> Makeup [dB]

@@ -1,4 +1,4 @@
-desc:#SD Volume Adjust
+desc:sd_volume
 
 slider1: 0 < -72 , 12 , 0.1 >Volume [dB]
 

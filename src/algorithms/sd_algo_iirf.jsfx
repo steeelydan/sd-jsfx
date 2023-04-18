@@ -1,4 +1,4 @@
-desc:#SD Algo IIRF (Lowpass)
+desc:sd_algo_iirf
 
 // https://www.youtube.com/watch?v=HexzW0EZal8
 // Inifinite Impulse Response filter (IIRF)

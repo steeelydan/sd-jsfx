@@ -1,4 +1,4 @@
-desc:#SD Compressor
+desc:sd_compressor
 
 slider1: -10 <-72, 6, 0.1>Threshold [dB]
 slider2: ratio=2 <1, 10, 0.01>Ratio

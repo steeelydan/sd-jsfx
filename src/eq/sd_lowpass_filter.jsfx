@@ -1,4 +1,4 @@
-desc:#SD Lowpass Filter
+desc:sd_lowpass_filter
 
 // Copied from Cockos' Resonant Lowpass Filter
 // This effect Copyright (C) 2004 and later Cockos Incorporated

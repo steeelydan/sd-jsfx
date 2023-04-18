@@ -1,4 +1,4 @@
-desc:#SD Channel Swap
+desc:sd_channel_swap
 
 @sample
 tmp = spl0;

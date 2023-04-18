@@ -1,4 +1,4 @@
-desc:#SD Pitch Shift
+desc:sd_pitch_shifter
 
 slider1: pitch=1<0.0833333333, 5, 0.0833333333>Pitch (st)
 

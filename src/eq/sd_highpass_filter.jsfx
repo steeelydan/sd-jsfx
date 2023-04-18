@@ -1,4 +1,4 @@
-desc:#SD Highpass Filter
+desc:sd_highpass_filter
 
 @sample
 currAvgL = (spl0 - previousL) / 2;

@@ -1,0 +1,8 @@
+desc:sd_gain
+
+slider1: gain=.5<0, 1, .01>Gain
+
+@sample
+spl0 *= gain;
+spl1 *= gain;
+
