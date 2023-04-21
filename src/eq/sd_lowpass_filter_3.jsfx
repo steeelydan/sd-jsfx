@@ -5,18 +5,15 @@ Tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
 Specification: https://www.w3.org/TR/audio-eq-cookbook/
 */
 
-slider1:freq=300 <20, 20000, 1>Freq 1 [Hz]
-slider2:gain=0 <-96, 12, 0.01>Gain 1 [dB]
-slider3:q=1 <0.1, 7, 0.01>Q 1
+slider1:freq=300 <20, 20000, 1>Freq [Hz]
+slider2:q=1 <0.1, 7, 0.01>Q
 
 @slider
 
-A1 = sqrt(10 ^ (gain / 20));
 omega = 2 * $pi * freq / srate;
 sinOmega = sin(omega);
 cosOmega = cos(omega);
 alpha = sinOmega / (2 * q);
-beta = sqrt(A) / q;
 
 @sample
 

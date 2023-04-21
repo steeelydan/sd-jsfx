@@ -1,0 +1,10 @@
+desc:sd_bitcrusher
+
+// Tutorial: https://www.youtube.com/watch?v=eKnQrbEkZhI
+
+slider1:bits=8<1,16,1>Bits
+
+@sample
+factor = 2 ^ bits;
+spl0 = floor(spl0 * factor) / factor;
+spl1 = floor(spl1 * factor) / factor;
