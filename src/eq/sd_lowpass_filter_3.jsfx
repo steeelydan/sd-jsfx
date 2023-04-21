@@ -8,6 +8,15 @@ Specification: https://www.w3.org/TR/audio-eq-cookbook/
 slider1:freq=300 <20, 20000, 1>Freq [Hz]
 slider2:q=1 <0.1, 7, 0.01>Q
 
+@init
+
+x_n = 0;
+x_n_1 = 2;
+x_n_2 = 4;
+y_n = 6;
+y_n_1 = 8;
+y_n_2 = 10;
+
 @slider
 
 omega = 2 * $pi * freq / srate;
@@ -22,23 +31,20 @@ a0 = 1 + alpha;
 a1 = -2 * cosOmega;
 a2 = 1 - alpha;
 
-x_n = 0;
-x_n_1 = 2;
-x_n_2 = 4;
-y_n = 6;
-y_n_1 = 8;
-y_n_2 = 10;
-
 @sample
 
 channel = -1;
 
-loop(num_ch,
+loop(2,
 channel += 1;
 
     y_n_2[channel] = y_n_1[channel];
     y_n_1[channel] = y_n[channel];
-    y_n[channel] = (b0 / a0) * x_n[channel] + (b1 / a0) * x_n_1[channel] + (b2 / a0) * x_n_2[channel] - (a1 / a0) * y_n_1[channel] - (a2 / a0) * y_n_2[channel];
+    y_n[channel] = (b0 / a0) * x_n[channel]
+      + (b1 / a0) * x_n_1[channel]
+      + (b2 / a0) * x_n_2[channel]
+      - (a1 / a0) * y_n_1[channel]
+      - (a2 / a0) * y_n_2[channel];
 
     x_n_2[channel] = x_n_1[channel];
     x_n_1[channel] = x_n[channel];
