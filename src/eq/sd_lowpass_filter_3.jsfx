@@ -15,8 +15,6 @@ sinOmega = sin(omega);
 cosOmega = cos(omega);
 alpha = sinOmega / (2 * q);
 
-@sample
-
 b0 = (1 - cosOmega) / 2;
 b1 = 1 - cosOmega;
 b2 = (1 - cosOmega) / 2;
@@ -24,12 +22,27 @@ a0 = 1 + alpha;
 a1 = -2 * cosOmega;
 a2 = 1 - alpha;
 
-y_n_2 = y_n_1;
-y_n_1 = y_n;
-y_n = (b0 / a0) * x_n + (b1 / a0) * x_n_1 + (b2 / a0) * x_n_2 - (a1 / a0) * y_n_1 - (a2 / a0) * y_n_2;
+x_n = 0;
+x_n_1 = 2;
+x_n_2 = 4;
+y_n = 6;
+y_n_1 = 8;
+y_n_2 = 10;
 
-x_n_2 = x_n_1;
-x_n_1 = x_n;
-x_n = spl0;
+@sample
 
-spl0 = spl1 = y_n;
+channel = -1;
+
+loop(num_ch,
+channel += 1;
+
+    y_n_2[channel] = y_n_1[channel];
+    y_n_1[channel] = y_n[channel];
+    y_n[channel] = (b0 / a0) * x_n[channel] + (b1 / a0) * x_n_1[channel] + (b2 / a0) * x_n_2[channel] - (a1 / a0) * y_n_1[channel] - (a2 / a0) * y_n_2[channel];
+
+    x_n_2[channel] = x_n_1[channel];
+    x_n_1[channel] = x_n[channel];
+    x_n[channel] = spl(channel);
+
+    spl(channel) = y_n[channel];
+);
