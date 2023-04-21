@@ -1,12 +1,12 @@
-desc:sd_peak_filter
+desc:sd_low_shelf
 
 /*
 Tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
 Specification: https://www.w3.org/TR/audio-eq-cookbook/
 */
 
-slider1:freq=300 <20, 20000, 1>Freq [Hz]
-slider2:q=1 <0.1, 7, 0.01>Q
+slider1:freq=200 <20, 20000, 1>Freq [Hz]
+slider2:q=0.5 <0.1, 7, 0.01>Q
 slider3:gain=0 <-96, 15, 0.01>Gain 1 [dB]
 
 @init
@@ -27,12 +27,12 @@ cosOmega = cos(omega);
 alpha = sinOmega / (2 * q);
 beta = sqrt(A) / q;
 
-b0 = 1 + alpha * A;
-b1 = -2 * cosOmega;
-b2 = 1 - alpha * A;
-a0 = 1 + alpha / A;
-a1 = -2 * cosOmega;
-a2 = 1 - alpha / A;
+b0 = A * ((A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
+b1 = 2 * A * ((A - 1) - (A + 1) * cosOmega);
+b2 = A * ((A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
+a0 = (A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha;
+a1 = -2 * ((A - 1) + (A + 1) * cosOmega);
+a2 = (A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
 
 @sample
 
