@@ -161,14 +161,16 @@ function processSample(
     y[ch];
   );
 
+bufferSize = 6 * channels;
+
 hpBuffer.createStereoBuffer(0);
-lpBuffer.createStereoBuffer(256);
-lowShelfBuffer.createStereoBuffer(512);
-lowBuffer.createStereoBuffer(768);
-loMidBuffer.createStereoBuffer(1024);
-hiMidBuffer.createStereoBuffer(1280);
-highShelfBuffer.createStereoBuffer(1536);
-highBuffer.createStereoBuffer(1792);
+lpBuffer.createStereoBuffer(bufferSize * 1);
+lowShelfBuffer.createStereoBuffer(bufferSize * 2);
+lowBuffer.createStereoBuffer(bufferSize * 3);
+loMidBuffer.createStereoBuffer(bufferSize * 4);
+hiMidBuffer.createStereoBuffer(bufferSize * 5);
+highShelfBuffer.createStereoBuffer(bufferSize * 6);
+highBuffer.createStereoBuffer(bufferSize * 7);
 
 setCoefs();
 
