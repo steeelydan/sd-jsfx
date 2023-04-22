@@ -11,19 +11,17 @@ slider8:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
 @init
 
-hpX = 0;
-hpX1 = 2;
-hpX2 = 4;
-hpY = 6;
-hpY1 = 8;
-hpY2 = 10;
+channels = 2; // FIXME can we make use of num_ch?
 
-lowX = 12;
-lowX1 = 14;
-lowX2 = 16;
-lowY = 18;
-lowY1 = 20;
-lowY2 = 22;
+function createStereoBuffer(offset)
+  (
+    this.y = offset + 0;
+    this.y1 = offset + channels;
+    this.y2 = offset + channels * 2;
+    this.x = offset + channels * 3;
+    this.x1 = offset + channels * 4;
+    this.x2 = offset + channels * 5;
+  );
 
 function setHpCoefs()
   local(omega sinOmega cosOmega alpha)
@@ -81,6 +79,9 @@ function processSample(
     y[ch];
   );
 
+hpBuffer.createStereoBuffer(0);
+lowBuffer.createStereoBuffer(256);
+
 hpCoefs.setHpCoefs();
 lowCoefs.setLowCoefs();
 
@@ -103,8 +104,8 @@ ch += 1;
     // High Pass
     value = processSample(
       value, ch,
-      hpX, hpX1, hpX2,
-      hpY, hpY1, hpY2,
+      hpBuffer.x, hpBuffer.x1, hpBuffer.x2,
+      hpBuffer.y, hpBuffer.y1, hpBuffer.y2,
       hpCoefs.a0, hpCoefs.a1, hpCoefs.a2,
       hpCoefs.b0, hpCoefs.b1, hpCoefs.b2
     );
@@ -113,8 +114,8 @@ ch += 1;
     lowGain != 0 ? (
       value = processSample(
         value, ch,
-        lowX, lowX1, lowX2,
-        lowY, lowY1, lowY2,
+        lowBuffer.x, lowBuffer.x1, lowBuffer.x2,
+        lowBuffer.y, lowBuffer.y1, lowBuffer.y2,
         lowCoefs.a0, lowCoefs.a1, lowCoefs.a2,
         lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
       );
