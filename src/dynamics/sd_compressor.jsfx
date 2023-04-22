@@ -2,7 +2,7 @@ desc:sd_compressor
 
 slider1: -10 <-72, 6, 0.1>Threshold [dB]
 slider2: ratio=2 <1, 10, 0.01>Ratio
-slider3: attacksetting=5 <0.004, 100, 0.1>Attack [ms]
+slider3: attacksetting=5 <0.01, 50, 0.01>Attack [ms]
 slider4: releasesetting=50 <1, 500, 1>Release [ms]
 slider5: 0 <0, 24 , 0.1> Makeup [dB]
 
