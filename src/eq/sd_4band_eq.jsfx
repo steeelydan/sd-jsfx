@@ -1,6 +1,6 @@
 desc:sd_4band_eq
 
-// Based on the W3 specs for EQs: https://www.w3.org/TR/audio-eq-cookbook/^
+// Based on the W3 specs for EQs: https://www.w3.org/TR/audio-eq-cookbook/
 // Based on the tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
 
 slider1:lpFreq=22000<3000, 22000, 1>LP Freq
@@ -27,12 +27,13 @@ slider20:lowGain=0<-15, 15, 0.01>Gain (dB)
 slider22:hpFreq=20<20, 1050, 1>HP Freq
 slider23:hpQ=0.5<0.1, 7, 0.01>Q
 
-slider200:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
+slider50:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
 @init
 
 channels = 2; // FIXME can we make use of num_ch?
 
+// Space to save former sample values
 function createStereoBuffer(offset)
   (
     this.y = offset + 0;
@@ -146,6 +147,7 @@ function processSample(
   (
     buffer.y2[ch] = buffer.y1[ch];
     buffer.y1[ch] = buffer.y[ch];
+
     buffer.y[ch] = (coefs.b0 / coefs.a0) * buffer.x[ch]
       + (coefs.b1 / coefs.a0) * buffer.x1[ch]
       + (coefs.b2 / coefs.a0) * buffer.x2[ch]
@@ -182,22 +184,31 @@ outputGain = 10 ^ ( outputGainDb / 20 );
 
 ch = -1;
 
-loop(2,
+loop(channels,
 ch += 1;
 
     value = spl(ch);
 
-    // High Pass
-    hpFreq > 20 ? (
-      value = processSample(value, ch, hpBuffer, hpCoefs);
-    );
-
-    // Low Pass
     lpFreq < 22000 ? (
       value = processSample(value, ch, lpBuffer, lpCoefs);
     );
 
-    // Low Band
+    highGain != 0 ? (
+      highType == 0 ? (
+        value = processSample(value, ch, highShelfBuffer, highShelfCoefs);
+      ) : (
+        value = processSample(value, ch, highBuffer, highCoefs);
+      )
+    );
+
+    hiMidGain != 0 ? (
+        value = processSample(value, ch, hiMidBuffer, hiMidCoefs);
+    );
+
+    loMidGain != 0 ? (
+        value = processSample(value, ch, loMidBuffer, loMidCoefs);
+    );
+
     lowGain != 0 ? (
       lowType == 0 ? (
         value = processSample(value, ch, lowShelfBuffer, lowShelfCoefs);
@@ -206,23 +217,8 @@ ch += 1;
       )
     );
 
-    // Lo Mid Band
-    loMidGain != 0 ? (
-        value = processSample(value, ch, loMidBuffer, loMidCoefs);
-    );
-
-    // Hi Mid Band
-    hiMidGain != 0 ? (
-        value = processSample(value, ch, hiMidBuffer, hiMidCoefs);
-    );
-
-    // High Band
-    highGain != 0 ? (
-      highType == 0 ? (
-        value = processSample(value, ch, highShelfBuffer, highShelfCoefs);
-      ) : (
-        value = processSample(value, ch, highBuffer, highCoefs);
-      )
+    hpFreq > 20 ? (
+      value = processSample(value, ch, hpBuffer, hpCoefs);
     );
 
     spl(ch) = value * outputGain;
