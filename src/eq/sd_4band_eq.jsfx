@@ -126,6 +126,18 @@ function setHighShelfCoefs()
     this.a2 = (A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
   );
 
+function setCoefs()
+  (
+    hpCoefs.setHpCoefs();
+    lpCoefs.setLpCoefs();
+    lowShelfCoefs.setLowShelfCoefs();
+    lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
+    loMidCoefs.setPeakCoefs(loMidFreq, loMidGain, loMidQ);
+    hiMidCoefs.setPeakCoefs(hiMidFreq, hiMidGain, hiMidQ);
+    highShelfCoefs.setHighShelfCoefs();
+    highCoefs.setPeakCoefs(highFreq, highGain, highQ);
+  );
+
 function processSample(
   prevValue, ch,
   x, x1, x2,
@@ -158,25 +170,11 @@ hiMidBuffer.createStereoBuffer(1280);
 highShelfBuffer.createStereoBuffer(1536);
 highBuffer.createStereoBuffer(1792);
 
-hpCoefs.setHpCoefs();
-lpCoefs.setLpCoefs();
-lowShelfCoefs.setLowShelfCoefs();
-lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
-loMidCoefs.setPeakCoefs(loMidFreq, loMidGain, loMidQ);
-hiMidCoefs.setPeakCoefs(hiMidFreq, hiMidGain, hiMidQ);
-highShelfCoefs.setHighShelfCoefs();
-highCoefs.setPeakCoefs(highFreq, highGain, highQ);
+setCoefs();
 
 @slider
 
-hpCoefs.setHpCoefs();
-lpCoefs.setLpCoefs();
-lowShelfCoefs.setLowShelfCoefs();
-lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
-loMidCoefs.setPeakCoefs(loMidFreq, loMidGain, loMidQ);
-hiMidCoefs.setPeakCoefs(hiMidFreq, hiMidGain, hiMidQ);
-highShelfCoefs.setHighShelfCoefs();
-highCoefs.setPeakCoefs(highFreq, highGain, highQ);
+setCoefs();
 
 outputGain = 10 ^ ( outputGainDb / 20 );
 
