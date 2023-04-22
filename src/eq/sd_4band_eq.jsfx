@@ -140,25 +140,23 @@ function setCoefs()
 
 function processSample(
   prevValue, ch,
-  x, x1, x2,
-  y, y1, y2,
-  a0, a1, a2,
-  b0, b1, b2
+  buffer*,
+  coefs*
 )
   (
-    y2[ch] = y1[ch];
-    y1[ch] = y[ch];
-    y[ch] = (b0 / a0) * x[ch]
-      + (b1 / a0) * x1[ch]
-      + (b2 / a0) * x2[ch]
-      - (a1 / a0) * y1[ch]
-      - (a2 / a0) * y2[ch];
+    buffer.y2[ch] = buffer.y1[ch];
+    buffer.y1[ch] = buffer.y[ch];
+    buffer.y[ch] = (coefs.b0 / coefs.a0) * buffer.x[ch]
+      + (coefs.b1 / coefs.a0) * buffer.x1[ch]
+      + (coefs.b2 / coefs.a0) * buffer.x2[ch]
+      - (coefs.a1 / coefs.a0) * buffer.y1[ch]
+      - (coefs.a2 / coefs.a0) * buffer.y2[ch];
 
-    x2[ch] = x1[ch];
-    x1[ch] = x[ch];
-    x[ch] = prevValue;
+    buffer.x2[ch] = buffer.x1[ch];
+    buffer.x1[ch] = buffer.x[ch];
+    buffer.x[ch] = prevValue;
 
-    y[ch];
+    buffer.y[ch];
   );
 
 bufferSize = 6 * channels;
@@ -191,87 +189,39 @@ ch += 1;
 
     // High Pass
     hpFreq > 20 ? (
-      value = processSample(
-        value, ch,
-        hpBuffer.x, hpBuffer.x1, hpBuffer.x2,
-        hpBuffer.y, hpBuffer.y1, hpBuffer.y2,
-        hpCoefs.a0, hpCoefs.a1, hpCoefs.a2,
-        hpCoefs.b0, hpCoefs.b1, hpCoefs.b2
-      );
+      value = processSample(value, ch, hpBuffer, hpCoefs);
     );
 
     // Low Pass
     lpFreq < 22000 ? (
-      value = processSample(
-        value, ch,
-        lpBuffer.x, lpBuffer.x1, lpBuffer.x2,
-        lpBuffer.y, lpBuffer.y1, lpBuffer.y2,
-        lpCoefs.a0, lpCoefs.a1, lpCoefs.a2,
-        lpCoefs.b0, lpCoefs.b1, lpCoefs.b2
-      );
+      value = processSample(value, ch, lpBuffer, lpCoefs);
     );
 
     // Low Band
     lowGain != 0 ? (
       lowType == 0 ? (
-        value = processSample(
-          value, ch,
-          lowShelfBuffer.x, lowShelfBuffer.x1, lowShelfBuffer.x2,
-          lowShelfBuffer.y, lowShelfBuffer.y1, lowShelfBuffer.y2,
-          lowShelfCoefs.a0, lowShelfCoefs.a1, lowShelfCoefs.a2,
-          lowShelfCoefs.b0, lowShelfCoefs.b1, lowShelfCoefs.b2
-        );
+        value = processSample(value, ch, lowShelfBuffer, lowShelfCoefs);
       ) : (
-        value = processSample(
-          value, ch,
-          lowBuffer.x, lowBuffer.x1, lowBuffer.x2,
-          lowBuffer.y, lowBuffer.y1, lowBuffer.y2,
-          lowCoefs.a0, lowCoefs.a1, lowCoefs.a2,
-          lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
-        );
+        value = processSample(value, ch, lowBuffer, lowCoefs);
       )
     );
 
     // Lo Mid Band
     loMidGain != 0 ? (
-        value = processSample(
-          value, ch,
-          loMidBuffer.x, loMidBuffer.x1, loMidBuffer.x2,
-          loMidBuffer.y, loMidBuffer.y1, loMidBuffer.y2,
-          loMidCoefs.a0, loMidCoefs.a1, loMidCoefs.a2,
-          loMidCoefs.b0, loMidCoefs.b1, loMidCoefs.b2
-        );
+        value = processSample(value, ch, loMidBuffer, loMidCoefs);
     );
 
     // Hi Mid Band
     hiMidGain != 0 ? (
-        value = processSample(
-          value, ch,
-          hiMidBuffer.x, hiMidBuffer.x1, hiMidBuffer.x2,
-          hiMidBuffer.y, hiMidBuffer.y1, hiMidBuffer.y2,
-          hiMidCoefs.a0, hiMidCoefs.a1, hiMidCoefs.a2,
-          hiMidCoefs.b0, hiMidCoefs.b1, hiMidCoefs.b2
-        );
+        value = processSample(value, ch, hiMidBuffer, hiMidCoefs);
     );
 
     // High Band
     highGain != 0 ? (
       highType == 0 ? (
-        value = processSample(
-          value, ch,
-          highShelfBuffer.x, highShelfBuffer.x1, highShelfBuffer.x2,
-          highShelfBuffer.y, highShelfBuffer.y1, highShelfBuffer.y2,
-          highShelfCoefs.a0, highShelfCoefs.a1, highShelfCoefs.a2,
-          highShelfCoefs.b0, highShelfCoefs.b1, highShelfCoefs.b2
-        );
+        value = processSample(value, ch, highShelfBuffer, highShelfCoefs);
       ) : (
-        value = processSample(
-          value, ch,
-          highBuffer.x, highBuffer.x1, highBuffer.x2,
-          highBuffer.y, highBuffer.y1, highBuffer.y2,
-          highCoefs.a0, highCoefs.a1, highCoefs.a2,
-          highCoefs.b0, highCoefs.b1, highCoefs.b2
-        );
+        value = processSample(value, ch, highBuffer, highCoefs);
       )
     );
 
