@@ -20,13 +20,21 @@ amplitude = 10 ^ (decibels / 20);
 
 ## Inifinite Impulse Response Filter (IIRF)
 
-Tutorial: https://www.youtube.com/watch?v=HexzW0EZal8
+Tutorial: https://www.youtube.com/live/HexzW0EZal8?t=5523
+
+Useful for frequency manipulation. Memorize one or more previous sample to decide what to do with the current sample.
+
+Examples:
+
+-   Make amplitude change _more intense_ / _faster_ / _steeper_ => Less low frequencies, high-pass.
+
+-   Make amplitude change _less intense_ / _slower_ / _less steep_ => Less high frequencies, low-pass.
 
 ```eel
 @sample
-average = (spl0 + previous) / 2;
-previous = spl0;
-spl0 = spl1 = average;
+average = (spl0 + previous) / 2;    // Make amplitude change less steep by averaging it with previous sample
+previous = spl0;                    // Save this sample for next round
+spl0 = average;
 ```
 
 ### Biquad Filters
