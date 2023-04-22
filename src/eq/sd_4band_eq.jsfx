@@ -1,17 +1,27 @@
-desc:sd_channelstrip
+desc:sd_4band_eq
 
-slider1:hpFreq=20<20, 1050, 1>HP Freq (Hz)
-slider2:hpQ=1<0.1, 7, 0.01>HP Q
+slider1:hpFreq=20<20, 1050, 1>HP Freq
+slider2:hpQ=0.5<0.1, 7, 0.01>Q
+slider3:lpFreq=22000<3000, 22000, 1>LP Freq
+slider4:lpQ=0.5<0.1, 7, 0.01>Q
 
-slider4:lowType=0<0,1,1{Shelf,Peak}>Low Type
-slider5:lowFreq=200<30,450,1>Low Freq (Hz)
-slider6:lowQ=1<0.1, 7, 0.01>Low Q
-slider7:lowGain=0<-15, 15, 0.01>Low Gain (dB)
+slider6:lowType=0<0,1,1{Shelf,Peak}>Low Type
+slider7:lowFreq=200<30,450,1>Freq
+slider8:lowQ=0.5<0.1, 7, 0.01>Q
+slider9:lowGain=0<-15, 15, 0.01>Gain (dB)
 
-slider9:highType=0<0,1,1{Shelf,Peak}>High Type
-slider10:highFreq=8000 <20, 20000, 1>High Freq (Hz)
-slider11:highQ=0.5 <0.1, 7, 0.01>High Q
-slider12:highGain=0 <-96, 15, 0.01>High Gain (dB)
+slider11:loMidFreq=1000<200,2500,1>Lo Mid Freq
+slider12:loMidQ=0.5<0.1, 7, 0.01>Q
+slider13:loMidGain=0<-15, 15, 0.01>Gain (dB)
+
+slider15:hiMidFreq=3000<600,7000,1>Hi Mid Freq
+slider16:hiMidQ=0.5<0.1, 7, 0.01>Q
+slider17:hiMidGain=0<-15, 15, 0.01>Gain (dB)
+
+slider19:highType=0<0,1,1{Shelf,Peak}>High Type
+slider20:highFreq=8000 <20, 20000, 1>Freq
+slider21:highQ=0.5 <0.1, 7, 0.01>Q
+slider22:highGain=0 <-15, 15, 0.01>Gain (dB)
 
 slider200:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
@@ -40,6 +50,22 @@ function setHpCoefs()
     this.b0 = (1 + cosOmega) / 2;
     this.b1 = - (1 + cosOmega);
     this.b2 = (1 + cosOmega) / 2;
+    this.a0 = 1 + alpha;
+    this.a1 = -2 * cosOmega;
+    this.a2 = 1 - alpha;
+  );
+
+function setLpCoefs()
+  local(omega sinOmega cosOmega alpha)
+  (
+    omega = 2 * $pi * lpFreq / srate;
+    sinOmega = sin(omega);
+    cosOmega = cos(omega);
+    alpha = sinOmega / (2 * lpQ);
+
+    this.b0 = (1 - cosOmega) / 2;
+    this.b1 = 1 - cosOmega;
+    this.b2 = (1 - cosOmega) / 2;
     this.a0 = 1 + alpha;
     this.a1 = -2 * cosOmega;
     this.a2 = 1 - alpha;
@@ -120,22 +146,31 @@ function processSample(
   );
 
 hpBuffer.createStereoBuffer(0);
-lowShelfBuffer.createStereoBuffer(256);
-lowBuffer.createStereoBuffer(512);
-highShelfBuffer.createStereoBuffer(768);
-highBuffer.createStereoBuffer(1024);
+lpBuffer.createStereoBuffer(256);
+lowShelfBuffer.createStereoBuffer(512);
+lowBuffer.createStereoBuffer(768);
+loMidBuffer.createStereoBuffer(1024);
+hiMidBuffer.createStereoBuffer(1280);
+highShelfBuffer.createStereoBuffer(1536);
+highBuffer.createStereoBuffer(1792);
 
 hpCoefs.setHpCoefs();
+lpCoefs.setLpCoefs();
 lowShelfCoefs.setLowShelfCoefs();
 lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
+loMidCoefs.setPeakCoefs(loMidFreq, loMidGain, loMidQ);
+hiMidCoefs.setPeakCoefs(hiMidFreq, hiMidGain, hiMidQ);
 highShelfCoefs.setHighShelfCoefs();
 highCoefs.setPeakCoefs(highFreq, highGain, highQ);
 
 @slider
 
 hpCoefs.setHpCoefs();
+lpCoefs.setLpCoefs();
 lowShelfCoefs.setLowShelfCoefs();
 lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
+loMidCoefs.setPeakCoefs(loMidFreq, loMidGain, loMidQ);
+hiMidCoefs.setPeakCoefs(hiMidFreq, hiMidGain, hiMidQ);
 highShelfCoefs.setHighShelfCoefs();
 highCoefs.setPeakCoefs(highFreq, highGain, highQ);
 
@@ -151,12 +186,25 @@ ch += 1;
     value = spl(ch);
 
     // High Pass
-    value = processSample(
-      value, ch,
-      hpBuffer.x, hpBuffer.x1, hpBuffer.x2,
-      hpBuffer.y, hpBuffer.y1, hpBuffer.y2,
-      hpCoefs.a0, hpCoefs.a1, hpCoefs.a2,
-      hpCoefs.b0, hpCoefs.b1, hpCoefs.b2
+    hpFreq > 20 ? (
+      value = processSample(
+        value, ch,
+        hpBuffer.x, hpBuffer.x1, hpBuffer.x2,
+        hpBuffer.y, hpBuffer.y1, hpBuffer.y2,
+        hpCoefs.a0, hpCoefs.a1, hpCoefs.a2,
+        hpCoefs.b0, hpCoefs.b1, hpCoefs.b2
+      );
+    );
+
+    // Low Pass
+    lpFreq < 22000 ? (
+      value = processSample(
+        value, ch,
+        lpBuffer.x, lpBuffer.x1, lpBuffer.x2,
+        lpBuffer.y, lpBuffer.y1, lpBuffer.y2,
+        lpCoefs.a0, lpCoefs.a1, lpCoefs.a2,
+        lpCoefs.b0, lpCoefs.b1, lpCoefs.b2
+      );
     );
 
     // Low Band
@@ -178,6 +226,28 @@ ch += 1;
           lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
         );
       )
+    );
+
+    // Lo Mid Band
+    loMidGain != 0 ? (
+        value = processSample(
+          value, ch,
+          loMidBuffer.x, loMidBuffer.x1, loMidBuffer.x2,
+          loMidBuffer.y, loMidBuffer.y1, loMidBuffer.y2,
+          loMidCoefs.a0, loMidCoefs.a1, loMidCoefs.a2,
+          loMidCoefs.b0, loMidCoefs.b1, loMidCoefs.b2
+        );
+    );
+
+    // Hi Mid Band
+    hiMidGain != 0 ? (
+        value = processSample(
+          value, ch,
+          hiMidBuffer.x, hiMidBuffer.x1, hiMidBuffer.x2,
+          hiMidBuffer.y, hiMidBuffer.y1, hiMidBuffer.y2,
+          hiMidCoefs.a0, hiMidCoefs.a1, hiMidCoefs.a2,
+          hiMidCoefs.b0, hiMidCoefs.b1, hiMidCoefs.b2
+        );
     );
 
     // High Band
