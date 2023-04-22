@@ -1,27 +1,28 @@
 desc:sd_4band_eq
 
-slider1:hpFreq=20<20, 1050, 1>HP Freq
-slider2:hpQ=0.5<0.1, 7, 0.01>Q
-slider3:lpFreq=22000<3000, 22000, 1>LP Freq
-slider4:lpQ=0.5<0.1, 7, 0.01>Q
+slider1:lpFreq=22000<3000, 22000, 1>LP Freq
+slider2:lpQ=0.5<0.1, 7, 0.01>Q
 
-slider6:lowType=0<0,1,1{Shelf,Peak}>Low Type
-slider7:lowFreq=200<30,450,1>Freq
-slider8:lowQ=0.5<0.1, 7, 0.01>Q
-slider9:lowGain=0<-15, 15, 0.01>Gain (dB)
+slider4:highType=0<0,1,1{Shelf,Peak}>High Type
+slider5:highFreq=8000 <20, 20000, 1>Freq
+slider6:highQ=0.5 <0.1, 7, 0.01>Q
+slider7:highGain=0 <-15, 15, 0.01>Gain (dB)
 
-slider11:loMidFreq=1000<200,2500,1>Lo Mid Freq
-slider12:loMidQ=0.5<0.1, 7, 0.01>Q
-slider13:loMidGain=0<-15, 15, 0.01>Gain (dB)
+slider9:hiMidFreq=3000<600,7000,1>Hi Mid Freq
+slider10:hiMidQ=0.5<0.1, 7, 0.01>Q
+slider11:hiMidGain=0<-15, 15, 0.01>Gain (dB)
 
-slider15:hiMidFreq=3000<600,7000,1>Hi Mid Freq
-slider16:hiMidQ=0.5<0.1, 7, 0.01>Q
-slider17:hiMidGain=0<-15, 15, 0.01>Gain (dB)
+slider13:loMidFreq=1000<200,2500,1>Lo Mid Freq
+slider14:loMidQ=0.5<0.1, 7, 0.01>Q
+slider15:loMidGain=0<-15, 15, 0.01>Gain (dB)
 
-slider19:highType=0<0,1,1{Shelf,Peak}>High Type
-slider20:highFreq=8000 <20, 20000, 1>Freq
-slider21:highQ=0.5 <0.1, 7, 0.01>Q
-slider22:highGain=0 <-15, 15, 0.01>Gain (dB)
+slider17:lowType=0<0,1,1{Shelf,Peak}>Low Type
+slider18:lowFreq=200<30,450,1>Freq
+slider19:lowQ=0.5<0.1, 7, 0.01>Q
+slider20:lowGain=0<-15, 15, 0.01>Gain (dB)
+
+slider22:hpFreq=20<20, 1050, 1>HP Freq
+slider23:hpQ=0.5<0.1, 7, 0.01>Q
 
 slider200:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
