@@ -3,13 +3,15 @@ desc:sd_channelstrip
 slider1:hpFreq=20<20, 1050, 1>HP Freq (Hz)
 slider2:hpQ=1<0.1, 7, 0.01>HP Q
 
-slider4:lowFreq=200<30,450,1>Low Freq (Hz)
-slider5:lowQ=1<0.1, 7, 0.01>Low Q
-slider6:lowGain=0<-15, 15, 0.01>Low Gain (dB)
+slider4:lowType=0<0,1,1{Shelf,Peak}>Low Type
+slider5:lowFreq=200<30,450,1>Low Freq (Hz)
+slider6:lowQ=1<0.1, 7, 0.01>Low Q
+slider7:lowGain=0<-15, 15, 0.01>Low Gain (dB)
 
-slider8:highShelfFreq=8000 <20, 20000, 1>Hi Shelf Freq (Hz)
-slider9:highShelfQ=0.5 <0.1, 7, 0.01>Hi Shelf Q
-slider10:highShelfGain=0 <-96, 15, 0.01>Hi Shelf Gain (dB)
+slider9:highType=0<0,1,1{Shelf,Peak}>High Type
+slider10:highFreq=8000 <20, 20000, 1>High Freq (Hz)
+slider11:highQ=0.5 <0.1, 7, 0.01>High Q
+slider12:highGain=0 <-96, 15, 0.01>High Gain (dB)
 
 slider200:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
@@ -43,7 +45,7 @@ function setHpCoefs()
     this.a2 = 1 - alpha;
   );
 
-function setLowCoefs()
+function setLowShelfCoefs()
   local(A, omega, sinOmega, cosOmega, alpha)
   (
     A = 10 ^ (lowGain / 40);
@@ -51,6 +53,23 @@ function setLowCoefs()
     sinOmega = sin(omega);
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * lowQ);
+
+    this.b0 = A * ((A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
+    this.b1 = 2 * A * ((A - 1) - (A + 1) * cosOmega);
+    this.b2 = A * ((A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
+    this.a0 = (A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha;
+    this.a1 = -2 * ((A - 1) + (A + 1) * cosOmega);
+    this.a2 = (A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
+  );
+
+function setPeakCoefs(freq, gain, q)
+  local(A, omega, sinOmega, cosOmega, alpha)
+  (
+    A = 10 ^ (gain / 40);
+    omega = 2 * $pi * freq / srate;
+    sinOmega = sin(omega);
+    cosOmega = cos(omega);
+    alpha = sinOmega / (2 * q);
 
     this.b0 = 1 + alpha * A;
     this.b1 = -2 * cosOmega;
@@ -63,11 +82,11 @@ function setLowCoefs()
 function setHighShelfCoefs()
   local(A, omega, sinOmega, cosOmega, alpha)
   (
-    A = 10 ^ (highShelfGain / 40);
-    omega = 2 * $pi * highShelfFreq / srate;
+    A = 10 ^ (highGain / 40);
+    omega = 2 * $pi * highFreq / srate;
     sinOmega = sin(omega);
     cosOmega = cos(omega);
-    alpha = sinOmega / (2 * highShelfQ);
+    alpha = sinOmega / (2 * highQ);
 
     this.b0 = A * ((A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
     this.b1 = -2 * A * ((A - 1) + (A + 1) * cosOmega);
@@ -101,18 +120,24 @@ function processSample(
   );
 
 hpBuffer.createStereoBuffer(0);
-lowBuffer.createStereoBuffer(256);
-highShelfBuffer.createStereoBuffer(512);
+lowShelfBuffer.createStereoBuffer(256);
+lowBuffer.createStereoBuffer(512);
+highShelfBuffer.createStereoBuffer(768);
+highBuffer.createStereoBuffer(1024);
 
 hpCoefs.setHpCoefs();
-lowCoefs.setLowCoefs();
+lowShelfCoefs.setLowShelfCoefs();
+lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
 highShelfCoefs.setHighShelfCoefs();
+highCoefs.setPeakCoefs(highFreq, highGain, highQ);
 
 @slider
 
 hpCoefs.setHpCoefs();
-lowCoefs.setLowCoefs();
+lowShelfCoefs.setLowShelfCoefs();
+lowCoefs.setPeakCoefs(lowFreq, lowGain, lowQ);
 highShelfCoefs.setHighShelfCoefs();
+highCoefs.setPeakCoefs(highFreq, highGain, highQ);
 
 outputGain = 10 ^ ( outputGainDb / 20 );
 
@@ -136,24 +161,44 @@ ch += 1;
 
     // Low Band
     lowGain != 0 ? (
-      value = processSample(
-        value, ch,
-        lowBuffer.x, lowBuffer.x1, lowBuffer.x2,
-        lowBuffer.y, lowBuffer.y1, lowBuffer.y2,
-        lowCoefs.a0, lowCoefs.a1, lowCoefs.a2,
-        lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
-      );
+      lowType == 0 ? (
+        value = processSample(
+          value, ch,
+          lowShelfBuffer.x, lowShelfBuffer.x1, lowShelfBuffer.x2,
+          lowShelfBuffer.y, lowShelfBuffer.y1, lowShelfBuffer.y2,
+          lowShelfCoefs.a0, lowShelfCoefs.a1, lowShelfCoefs.a2,
+          lowShelfCoefs.b0, lowShelfCoefs.b1, lowShelfCoefs.b2
+        );
+      ) : (
+        value = processSample(
+          value, ch,
+          lowBuffer.x, lowBuffer.x1, lowBuffer.x2,
+          lowBuffer.y, lowBuffer.y1, lowBuffer.y2,
+          lowCoefs.a0, lowCoefs.a1, lowCoefs.a2,
+          lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
+        );
+      )
     );
 
-    // Hi Shelf
-    highShelfGain != 0 ? (
-      value = processSample(
-        value, ch,
-        highShelfBuffer.x, highShelfBuffer.x1, highShelfBuffer.x2,
-        highShelfBuffer.y, highShelfBuffer.y1, highShelfBuffer.y2,
-        highShelfCoefs.a0, highShelfCoefs.a1, highShelfCoefs.a2,
-        highShelfCoefs.b0, highShelfCoefs.b1, highShelfCoefs.b2
-      );
+    // High Band
+    highGain != 0 ? (
+      highType == 0 ? (
+        value = processSample(
+          value, ch,
+          highShelfBuffer.x, highShelfBuffer.x1, highShelfBuffer.x2,
+          highShelfBuffer.y, highShelfBuffer.y1, highShelfBuffer.y2,
+          highShelfCoefs.a0, highShelfCoefs.a1, highShelfCoefs.a2,
+          highShelfCoefs.b0, highShelfCoefs.b1, highShelfCoefs.b2
+        );
+      ) : (
+        value = processSample(
+          value, ch,
+          highBuffer.x, highBuffer.x1, highBuffer.x2,
+          highBuffer.y, highBuffer.y1, highBuffer.y2,
+          highCoefs.a0, highCoefs.a1, highCoefs.a2,
+          highCoefs.b0, highCoefs.b1, highCoefs.b2
+        );
+      )
     );
 
     spl(ch) = value * outputGain;
