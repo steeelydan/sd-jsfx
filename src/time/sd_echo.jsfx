@@ -1,5 +1,7 @@
 desc:sd_echo
 
+// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 slider1:120 <0, 1000, 1>Length [ms]
 
 @slider

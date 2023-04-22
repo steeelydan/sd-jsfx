@@ -1,5 +1,7 @@
 desc:sd_limiter
 
+// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 slider1: 0 <-72, 0, 0.1> Threshold [dB]
 slider2: 0 <0, 24 , 0.1> Makeup [dB]
 

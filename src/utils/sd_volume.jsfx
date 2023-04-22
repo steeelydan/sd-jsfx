@@ -1,20 +1,6 @@
 desc:sd_volume
 
-/*
-Decibels / amplitude conversion:
-
-decibels = 20 * log(abs(amplitude));
-amplitude = 10 ^ (decibels / 20);
-
-Rules of logarithms:
-
-log(x * y) = log(x) + log(y)
-log(x / y) = log(x) - log(y)
-log(x ^ y) = y * log(x)
-log(1 / x) = -log(x)
-log(1) = 0
-NOT for log10: ln(e) = 1
-*/
+// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
 
 slider1:volume=0 < -150 , 18 , 0.1 >Volume [dB]
 

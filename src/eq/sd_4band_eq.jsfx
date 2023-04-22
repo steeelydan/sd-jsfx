@@ -1,5 +1,8 @@
 desc:sd_4band_eq
 
+// Based on the W3 specs for EQs: https://www.w3.org/TR/audio-eq-cookbook/^
+// Based on the tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
+
 slider1:lpFreq=22000<3000, 22000, 1>LP Freq
 slider2:lpQ=0.5<0.1, 7, 0.01>Q
 

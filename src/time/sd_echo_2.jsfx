@@ -1,5 +1,7 @@
 desc:sd_echo_2
 
+// Adapted from https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 slider1:120 <0, 1000, 1>Length [ms]
 slider2:-6 < -72 , 0 , 0.1 >Mix [dB]
 

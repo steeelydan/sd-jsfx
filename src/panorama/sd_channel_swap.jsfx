@@ -1,5 +1,7 @@
 desc:sd_channel_swap
 
+// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 @sample
 tmp = spl0;
 spl0 = spl1;

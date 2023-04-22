@@ -1,5 +1,7 @@
 desc:sd_drum_machine
 
+// Adapted from https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 @init
 maxPoly = 2;
 poly = 0;

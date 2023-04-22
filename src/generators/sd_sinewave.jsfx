@@ -1,5 +1,7 @@
 desc:sd_sinewave
 
+// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+
 slider1: freq=80<0,440,1>Frequency [Hz]
 slider2:-9<-72,0,0.1>Volume [dB]
 
