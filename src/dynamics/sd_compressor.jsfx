@@ -14,10 +14,8 @@ gain = 1;
 thresh = 10 ^ (slider1 / 20);
 makeup = 10 ^ (slider5 / 20);
 
-// ~2000 dB/Sec
 attack = 10 ^ ((6 * (100  / attacksetting) / srate) / 20);
 
-// ~60 dB/Sec
 release = 10 ^ ((6 * (100 / releasesetting ) / srate) / 20);
 
 @sample
@@ -37,7 +35,6 @@ maxsamples > thresh ?
 // attack and release speed:
 gain > seekgain ? ( gain /= attack; ) : ( gain *= release; );
 
-// Todo display
 gr = 20 * log10(gain * seekgain);
 
 spl0 *= gain * makeup;
