@@ -7,7 +7,11 @@ slider4:lowFreq=200<30,450,1>Low Freq (Hz)
 slider5:lowQ=1<0.1, 7, 0.01>Low Q
 slider6:lowGain=0<-15, 15, 0.01>Low Gain (dB)
 
-slider8:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
+slider8:highShelfFreq=8000 <20, 20000, 1>Hi Shelf Freq (Hz)
+slider9:highShelfQ=0.5 <0.1, 7, 0.01>Hi Shelf Q
+slider10:highShelfGain=0 <-96, 15, 0.01>Hi Shelf Gain (dB)
+
+slider200:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
 @init
 
@@ -56,6 +60,23 @@ function setLowCoefs()
     this.a2 = 1 - alpha / A;
   );
 
+function setHighShelfCoefs()
+  local(A, omega, sinOmega, cosOmega, alpha)
+  (
+    A = 10 ^ (highShelfGain / 40);
+    omega = 2 * $pi * highShelfFreq / srate;
+    sinOmega = sin(omega);
+    cosOmega = cos(omega);
+    alpha = sinOmega / (2 * highShelfQ);
+
+    this.b0 = A * ((A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
+    this.b1 = -2 * A * ((A - 1) + (A + 1) * cosOmega);
+    this.b2 = A * ((A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
+    this.a0 = (A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha;
+    this.a1 = 2 * ((A - 1) - (A + 1) * cosOmega);
+    this.a2 = (A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
+  );
+
 function processSample(
   prevValue, ch,
   x, x1, x2,
@@ -81,14 +102,17 @@ function processSample(
 
 hpBuffer.createStereoBuffer(0);
 lowBuffer.createStereoBuffer(256);
+highShelfBuffer.createStereoBuffer(512);
 
 hpCoefs.setHpCoefs();
 lowCoefs.setLowCoefs();
+highShelfCoefs.setHighShelfCoefs();
 
 @slider
 
 hpCoefs.setHpCoefs();
 lowCoefs.setLowCoefs();
+highShelfCoefs.setHighShelfCoefs();
 
 outputGain = 10 ^ ( outputGainDb / 20 );
 
@@ -118,6 +142,17 @@ ch += 1;
         lowBuffer.y, lowBuffer.y1, lowBuffer.y2,
         lowCoefs.a0, lowCoefs.a1, lowCoefs.a2,
         lowCoefs.b0, lowCoefs.b1, lowCoefs.b2
+      );
+    );
+
+    // Hi Shelf
+    highShelfGain != 0 ? (
+      value = processSample(
+        value, ch,
+        highShelfBuffer.x, highShelfBuffer.x1, highShelfBuffer.x2,
+        highShelfBuffer.y, highShelfBuffer.y1, highShelfBuffer.y2,
+        highShelfCoefs.a0, highShelfCoefs.a1, highShelfCoefs.a2,
+        highShelfCoefs.b0, highShelfCoefs.b1, highShelfCoefs.b2
       );
     );
 
