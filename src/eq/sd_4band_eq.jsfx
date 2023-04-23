@@ -52,17 +52,18 @@ function setHpCoefs()
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * hpQ);
 
-    this.b0 = (1 + cosOmega) / 2;
-    this.b1 = - (1 + cosOmega);
-    this.b2 = (1 + cosOmega) / 2;
     this.a0 = 1 + alpha;
     this.a1 = -2 * cosOmega;
     this.a2 = 1 - alpha;
+    this.b0 = (1 + cosOmega) / 2;
+    this.b1 = - (1 + cosOmega);
+    this.b2 = (1 + cosOmega) / 2;
+
+    this.a1x = this.a1 / this.a0;
+    this.a2x = this.a2 / this.a0;
     this.b0x = this.b0 / this.a0;
     this.b1x = this.b1 / this.a0;
     this.b2x = this.b2 / this.a0;
-    this.a1x = this.a1 / this.a0;
-    this.a2x = this.a2 / this.a0;
   );
 
 function setLpCoefs()
@@ -73,17 +74,18 @@ function setLpCoefs()
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * lpQ);
 
-    this.b0 = (1 - cosOmega) / 2;
-    this.b1 = 1 - cosOmega;
-    this.b2 = (1 - cosOmega) / 2;
     this.a0 = 1 + alpha;
     this.a1 = -2 * cosOmega;
     this.a2 = 1 - alpha;
+    this.b0 = (1 - cosOmega) / 2;
+    this.b1 = 1 - cosOmega;
+    this.b2 = (1 - cosOmega) / 2;
+
+    this.a1x = this.a1 / this.a0;
+    this.a2x = this.a2 / this.a0;
     this.b0x = this.b0 / this.a0;
     this.b1x = this.b1 / this.a0;
     this.b2x = this.b2 / this.a0;
-    this.a1x = this.a1 / this.a0;
-    this.a2x = this.a2 / this.a0;
   );
 
 function setLowShelfCoefs()
@@ -95,17 +97,18 @@ function setLowShelfCoefs()
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * lowQ);
 
-    this.b0 = A * ((A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
-    this.b1 = 2 * A * ((A - 1) - (A + 1) * cosOmega);
-    this.b2 = A * ((A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
     this.a0 = (A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha;
     this.a1 = -2 * ((A - 1) + (A + 1) * cosOmega);
     this.a2 = (A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
+    this.b0 = A * ((A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
+    this.b1 = 2 * A * ((A - 1) - (A + 1) * cosOmega);
+    this.b2 = A * ((A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
+
+    this.a1x = this.a1 / this.a0;
+    this.a2x = this.a2 / this.a0;
     this.b0x = this.b0 / this.a0;
     this.b1x = this.b1 / this.a0;
     this.b2x = this.b2 / this.a0;
-    this.a1x = this.a1 / this.a0;
-    this.a2x = this.a2 / this.a0;
   );
 
 function setPeakCoefs(freq, gain, q)
@@ -117,17 +120,18 @@ function setPeakCoefs(freq, gain, q)
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * q);
 
-    this.b0 = 1 + alpha * A;
-    this.b1 = -2 * cosOmega;
-    this.b2 = 1 - alpha * A;
     this.a0 = 1 + alpha / A;
     this.a1 = -2 * cosOmega;
     this.a2 = 1 - alpha / A;
+    this.b0 = 1 + alpha * A;
+    this.b1 = -2 * cosOmega;
+    this.b2 = 1 - alpha * A;
+
+    this.a1x = this.a1 / this.a0;
+    this.a2x = this.a2 / this.a0;
     this.b0x = this.b0 / this.a0;
     this.b1x = this.b1 / this.a0;
     this.b2x = this.b2 / this.a0;
-    this.a1x = this.a1 / this.a0;
-    this.a2x = this.a2 / this.a0;
   );
 
 function setHighShelfCoefs()
@@ -139,17 +143,18 @@ function setHighShelfCoefs()
     cosOmega = cos(omega);
     alpha = sinOmega / (2 * highQ);
 
-    this.b0 = A * ((A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
-    this.b1 = -2 * A * ((A - 1) + (A + 1) * cosOmega);
-    this.b2 = A * ((A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
     this.a0 = (A + 1) - (A - 1) * cosOmega + 2 * sqrt(A) * alpha;
     this.a1 = 2 * ((A - 1) - (A + 1) * cosOmega);
     this.a2 = (A + 1) - (A - 1) * cosOmega - 2 * sqrt(A) * alpha;
+    this.b0 = A * ((A + 1) + (A - 1) * cosOmega + 2 * sqrt(A) * alpha);
+    this.b1 = -2 * A * ((A - 1) + (A + 1) * cosOmega);
+    this.b2 = A * ((A + 1) + (A - 1) * cosOmega - 2 * sqrt(A) * alpha);
+
+    this.a1x = this.a1 / this.a0;
+    this.a2x = this.a2 / this.a0;
     this.b0x = this.b0 / this.a0;
     this.b1x = this.b1 / this.a0;
     this.b2x = this.b2 / this.a0;
-    this.a1x = this.a1 / this.a0;
-    this.a2x = this.a2 / this.a0;
   );
 
 function setCoefs()
