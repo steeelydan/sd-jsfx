@@ -255,23 +255,19 @@ valueL = spl0;
 valueR = spl1;
 
 lpFreq < 22000 ? (
-  lpY2L = lpY1L;
-  lpY1L = lpYL;
-
   lpYL = lpB0x * lpXL
     + lpB1x * lpX1L
     + lpB2x * lpX2L
     - lpA1x * lpY1L
     - lpA2x * lpY2L;
 
+  lpY2L = lpY1L;
+  lpY1L = lpYL;
   lpX2L = lpX1L;
   lpX1L = lpXL;
   lpXL = valueL;
 
   valueL = lpYL;
-
-  lpY2R = lpY1R;
-  lpY1R = lpYR;
 
   lpYR = lpB0x * lpXR
     + lpB1x * lpX1R
@@ -279,6 +275,8 @@ lpFreq < 22000 ? (
     - lpA1x * lpY1R
     - lpA2x * lpY2R;
 
+  lpY2R = lpY1R;
+  lpY1R = lpYR;
   lpX2R = lpX1R;
   lpX1R = lpXR;
   lpXR = valueR;
@@ -288,23 +286,19 @@ lpFreq < 22000 ? (
 
 hiGain != 0 ? (
   hiType == 0 ? (
-    hsY2L = hsY1L;
-    hsY1L = hsYL;
-
     hsYL = hsB0x * hsXL
       + hsB1x * hsX1L
       + hsB2x * hsX2L
       - hsA1x * hsY1L
       - hsA2x * hsY2L;
 
+    hsY2L = hsY1L;
+    hsY1L = hsYL;
     hsX2L = hsX1L;
     hsX1L = hsXL;
     hsXL = valueL;
 
     valueL = hsYL;
-
-    hsY2R = hsY1R;
-    hsY1R = hsYR;
 
     hsYR = hsB0x * hsXR
       + hsB1x * hsX1R
@@ -312,29 +306,27 @@ hiGain != 0 ? (
       - hsA1x * hsY1R
       - hsA2x * hsY2R;
 
+    hsY2R = hsY1R;
+    hsY1R = hsYR;
     hsX2R = hsX1R;
     hsX1R = hsXR;
     hsXR = valueR;
 
     valueR = hsYR;
   ) : (
-    hiY2L = hiY1L;
-    hiY1L = hiYL;
-
     hiYL = hiB0x * hiXL
       + hiB1x * hiX1L
       + hiB2x * hiX2L
       - hiA1x * hiY1L
       - hiA2x * hiY2L;
 
+    hiY2L = hiY1L;
+    hiY1L = hiYL;
     hiX2L = hiX1L;
     hiX1L = hiXL;
     hiXL = valueL;
 
     valueL = hiYL;
-
-    hiY2R = hiY1R;
-    hiY1R = hiYR;
 
     hiYR = hiB0x * hiXR
       + hiB1x * hiX1R
@@ -342,6 +334,8 @@ hiGain != 0 ? (
       - hiA1x * hiY1R
       - hiA2x * hiY2R;
 
+    hiY2R = hiY1R;
+    hiY1R = hiYR;
     hiX2R = hiX1R;
     hiX1R = hiXR;
     hiXR = valueR;
@@ -351,23 +345,19 @@ hiGain != 0 ? (
 );
 
 hmGain != 0 ? (
-  hmY2L = hmY1L;
-  hmY1L = hmYL;
-
   hmYL = hmB0x * hmXL
     + hmB1x * hmX1L
     + hmB2x * hmX2L
     - hmA1x * hmY1L
     - hmA2x * hmY2L;
 
+  hmY2L = hmY1L;
+  hmY1L = hmYL;
   hmX2L = hmX1L;
   hmX1L = hmXL;
   hmXL = valueL;
 
   valueL = hmYL;
-
-  hmY2R = hmY1R;
-  hmY1R = hmYR;
 
   hmYR = hmB0x * hmXR
     + hmB1x * hmX1R
@@ -375,6 +365,8 @@ hmGain != 0 ? (
     - hmA1x * hmY1R
     - hmA2x * hmY2R;
 
+  hmY2R = hmY1R;
+  hmY1R = hmYR;
   hmX2R = hmX1R;
   hmX1R = hmXR;
   hmXR = valueR;
@@ -383,23 +375,19 @@ hmGain != 0 ? (
 );
 
 lmGain != 0 ? (
-  lmY2L = lmY1L;
-  lmY1L = lmYL;
-
   lmYL = lmB0x * lmXL
     + lmB1x * lmX1L
     + lmB2x * lmX2L
     - lmA1x * lmY1L
     - lmA2x * lmY2L;
 
+  lmY2L = lmY1L;
+  lmY1L = lmYL;
   lmX2L = lmX1L;
   lmX1L = lmXL;
   lmXL = valueL;
 
   valueL = lmYL;
-
-  lmY2R = lmY1R;
-  lmY1R = lmYR;
 
   lmYR = lmB0x * lmXR
     + lmB1x * lmX1R
@@ -407,6 +395,8 @@ lmGain != 0 ? (
     - lmA1x * lmY1R
     - lmA2x * lmY2R;
 
+  lmY2R = lmY1R;
+  lmY1R = lmYR;
   lmX2R = lmX1R;
   lmX1R = lmXR;
   lmXR = valueR;
@@ -416,23 +406,19 @@ lmGain != 0 ? (
 
 loGain != 0 ? (
   loType == 0 ? (
-    lsY2L = lsY1L;
-    lsY1L = lsYL;
-
     lsYL = lsB0x * lsXL
       + lsB1x * lsX1L
       + lsB2x * lsX2L
       - lsA1x * lsY1L
       - lsA2x * lsY2L;
 
+    lsY2L = lsY1L;
+    lsY1L = lsYL;
     lsX2L = lsX1L;
     lsX1L = lsXL;
     lsXL = valueL;
 
     valueL = lsYL;
-
-    lsY2R = lsY1R;
-    lsY1R = lsYR;
 
     lsYR = lsB0x * lsXR
       + lsB1x * lsX1R
@@ -440,29 +426,27 @@ loGain != 0 ? (
       - lsA1x * lsY1R
       - lsA2x * lsY2R;
 
+    lsY2R = lsY1R;
+    lsY1R = lsYR;
     lsX2R = lsX1R;
     lsX1R = lsXR;
     lsXR = valueR;
 
     valueR = lsYR;
   ) : (
-    loY2L = loY1L;
-    loY1L = loYL;
-
     loYL = loB0x * loXL
       + loB1x * loX1L
       + loB2x * loX2L
       - loA1x * loY1L
       - loA2x * loY2L;
 
+    loY2L = loY1L;
+    loY1L = loYL;
     loX2L = loX1L;
     loX1L = loXL;
     loXL = valueL;
 
     valueL = loYL;
-
-    loY2R = loY1R;
-    loY1R = loYR;
 
     loYR = loB0x * loXR
       + loB1x * loX1R
@@ -470,6 +454,8 @@ loGain != 0 ? (
       - loA1x * loY1R
       - loA2x * loY2R;
 
+    loY2R = loY1R;
+    loY1R = loYR;
     loX2R = loX1R;
     loX1R = loXR;
     loXR = valueR;
@@ -479,23 +465,19 @@ loGain != 0 ? (
 );
 
 hpFreq > 20 ? (
-  hpY2L = hpY1L;
-  hpY1L = hpYL;
-
   hpYL = hpB0x * hpXL
     + hpB1x * hpX1L
     + hpB2x * hpX2L
     - hpA1x * hpY1L
     - hpA2x * hpY2L;
 
+  hpY2L = hpY1L;
+  hpY1L = hpYL;
   hpX2L = hpX1L;
   hpX1L = hpXL;
   hpXL = valueL;
 
   valueL = hpYL;
-
-  hpY2R = hpY1R;
-  hpY1R = hpYR;
 
   hpYR = hpB0x * hpXR
     + hpB1x * hpX1R
@@ -503,6 +485,8 @@ hpFreq > 20 ? (
     - hpA1x * hpY1R
     - hpA2x * hpY2R;
 
+  hpY2R = hpY1R;
+  hpY1R = hpYR;
   hpX2R = hpX1R;
   hpX1R = hpXR;
   hpXR = valueR;

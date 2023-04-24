@@ -105,14 +105,14 @@ a2 = 1 - alpha / A;
 ```eel
 @sample
 
-y2 = y1;
-y1 = y;
 y = (b0 / a0) * x
     + (b1 / a0) * x1
     + (b2 / a0) * x2
     - (a1 / a0) * y1
     - (a2 / a0) * y2;
 
+y2 = y1;
+y1 = y;
 x2 = x1;
 x1 = x;
 x = spl0;       // The current sample
