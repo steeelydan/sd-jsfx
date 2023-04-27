@@ -7,7 +7,7 @@ Specification: https://www.w3.org/TR/audio-eq-cookbook/
 
 slider1:freq=300 <20, 20000, 1>Freq [Hz]
 slider2:q=1 <0.1, 7, 0.01>Q
-slider3:gain=0 <-96, 15, 0.01>Gain 1 [dB]
+slider3:gain=0 <-96, 15, 0.01>Gain [dB]
 
 @init
 

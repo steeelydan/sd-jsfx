@@ -89,7 +89,7 @@ function setLpCoefs()
   );
 
 function setLowShelfCoefs()
-  local(A, omega, sinOmega, cosOmega, alpha)
+  local(A omega sinOmega cosOmega alpha)
   (
     A = 10 ^ (lowGain / 40);
     omega = 2 * $pi * lowFreq / srate;
@@ -112,7 +112,7 @@ function setLowShelfCoefs()
   );
 
 function setPeakCoefs(freq, gain, q)
-  local(A, omega, sinOmega, cosOmega, alpha)
+  local(A omega sinOmega cosOmega alpha)
   (
     A = 10 ^ (gain / 40);
     omega = 2 * $pi * freq / srate;
@@ -135,7 +135,7 @@ function setPeakCoefs(freq, gain, q)
   );
 
 function setHighShelfCoefs()
-  local(A, omega, sinOmega, cosOmega, alpha)
+  local(A omega sinOmega cosOmega alpha)
   (
     A = 10 ^ (highGain / 40);
     omega = 2 * $pi * highFreq / srate;
