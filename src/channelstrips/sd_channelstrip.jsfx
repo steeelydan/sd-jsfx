@@ -30,6 +30,8 @@ slider23:hpQ=0.5<0.1, 7, 0.01>Q
 slider25:satGainDb=0<0,24,0.1>Saturation (dB)
 slider26:satTubePercent=0<0,100,0.1>Tube (%)
 
+slider28:wiring=0<0,1,1{eq - sat,sat - eq}>Wiring
+
 slider50:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
 in_pin:left input
@@ -38,6 +40,10 @@ out_pin:left output
 out_pin:right output
 
 @init
+
+// Wiring constants
+WIRING_EQ_SAT = 0;
+WIRING_SAT_EQ = 1;
 
 ext_tail_size = -1;
 
@@ -265,6 +271,47 @@ outputGain = 10 ^ ( outputGainDb / 20 );
 
 valueL = spl0;
 valueR = spl1;
+
+wiring == WIRING_SAT_EQ ? (
+  // Saturation
+
+  // Apply TANH
+
+  satGain > 1 ? (
+    satWetL = exp(2 * valueL * satGain);
+    satWetL = (satWetL - 1) / (satWetL + 1);
+
+    satWetR = exp(2 * valueR * satGain);
+    satWetR = (satWetR - 1) / (satWetR + 1);
+  ) : (
+    satWetL = valueL;
+    satWetR = valueR;
+  );
+
+
+  // Apply tube
+
+  satTube > 1 ? (
+    valueL = (
+      (
+        (exp(satWetL * satTube) - exp(satWetL * satTube * -1.2))
+        / (exp(satWetL * satTube) + exp(satWetL * satTube * -1.0))
+      )
+      / satTube
+    );
+
+    valueR = (
+      (
+        (exp(satWetR * satTube) - exp(satWetR * satTube * -1.2))
+        / (exp(satWetR * satTube) + exp(satWetR * satTube * -1.0))
+      )
+      / satTube
+    );
+  ) : (
+    valueL = satWetL;
+    valueR = satWetR;
+  );
+);
 
 // EQ & filters
 
@@ -508,43 +555,45 @@ hpFreq > 20 ? (
   valueR = hpYR;
 );
 
-// Saturation
+wiring == WIRING_EQ_SAT ? (
+  // Saturation
 
-// Apply TANH
+  // Apply TANH
 
-satGain > 1 ? (
-  satWetL = exp(2 * valueL * satGain);
-  satWetL = (satWetL - 1) / (satWetL + 1);
+  satGain > 1 ? (
+    satWetL = exp(2 * valueL * satGain);
+    satWetL = (satWetL - 1) / (satWetL + 1);
 
-  satWetR = exp(2 * valueR * satGain);
-  satWetR = (satWetR - 1) / (satWetR + 1);
-) : (
-  satWetL = valueL;
-  satWetR = valueR;
-);
-
-
-// Apply tube
-
-satTube > 1 ? (
-  valueL = (
-    (
-      (exp(satWetL * satTube) - exp(satWetL * satTube * -1.2))
-      / (exp(satWetL * satTube) + exp(satWetL * satTube * -1.0))
-    )
-    / satTube
+    satWetR = exp(2 * valueR * satGain);
+    satWetR = (satWetR - 1) / (satWetR + 1);
+  ) : (
+    satWetL = valueL;
+    satWetR = valueR;
   );
 
-  valueR = (
-    (
-      (exp(satWetR * satTube) - exp(satWetR * satTube * -1.2))
-      / (exp(satWetR * satTube) + exp(satWetR * satTube * -1.0))
-    )
-    / satTube
+
+  // Apply tube
+
+  satTube > 1 ? (
+    valueL = (
+      (
+        (exp(satWetL * satTube) - exp(satWetL * satTube * -1.2))
+        / (exp(satWetL * satTube) + exp(satWetL * satTube * -1.0))
+      )
+      / satTube
+    );
+
+    valueR = (
+      (
+        (exp(satWetR * satTube) - exp(satWetR * satTube * -1.2))
+        / (exp(satWetR * satTube) + exp(satWetR * satTube * -1.0))
+      )
+      / satTube
+    );
+  ) : (
+    valueL = satWetL;
+    valueR = satWetR;
   );
-) : (
-  valueL = satWetL;
-  valueR = satWetR;
 );
 
 // Output
