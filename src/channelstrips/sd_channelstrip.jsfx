@@ -35,7 +35,7 @@ slider29:compRatioSetting=2 <1, 10, 0.01>Ratio
 slider30:compAttackSetting=5 <0.01, 50, 0.01>Attack [ms]
 slider31:compReleaseSetting=50 <1, 500, 1>Release [ms]
 
-slider33:wiring=0<0,1,1{sat - eq,eq - sat}>Layout
+slider33:layout=0<0,1,1{sat - eq - cmp,eq - cmp - sat}>Layout
 
 slider50:outputGainDb=0<-20, 20, 0.01>Output Gain (dB)
 
@@ -49,8 +49,8 @@ out_pin:right output
 ext_tail_size = -1;
 
 // Wiring constants
-WIRING_SAT_EQ = 0;
-WIRING_EQ_SAT = 1;
+WIRING_SAT_EQ_CMP = 0;
+WIRING_EQ_CMP_SAT = 1;
 
 compGain = 1;
 
@@ -285,7 +285,7 @@ setCoefs();
 valueL = spl0;
 valueR = spl1;
 
-wiring == WIRING_SAT_EQ ? (
+layout == WIRING_SAT_EQ_CMP ? (
   // Saturation
 
   // Apply TANH
@@ -588,7 +588,7 @@ compThresholdDb < 0 ? (
 
 // Saturation
 
-wiring == WIRING_EQ_SAT ? (
+layout == WIRING_EQ_CMP_SAT ? (
   // Apply TANH
 
   satGain > 1 ? (
