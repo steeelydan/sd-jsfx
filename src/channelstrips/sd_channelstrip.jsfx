@@ -30,9 +30,14 @@ slider23:loGain=0<-15, 15, 0.01>Gain (dB)
 slider25:satGainDb=0<0,24,0.1>Saturation (dB)
 slider26:satTubePercent=0<0,100,0.1>Tube (%)
 
-slider28:wiring=0<0,1,1{sat - eq,eq - sat}>Layout
+slider28:compThresholdDb=0 <-72, 0, 0.1>Threshold [dB]
+slider29:compRatioSetting=2 <1, 10, 0.01>Ratio
+slider30:compAttackSetting=5 <0.01, 50, 0.01>Attack [ms]
+slider31:compReleaseSetting=50 <1, 500, 1>Release [ms]
 
-slider50:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
+slider33:wiring=0<0,1,1{sat - eq,eq - sat}>Layout
+
+slider50:outputGainDb=0<-20, 20, 0.01>Output Gain (dB)
 
 in_pin:left input
 in_pin:right input
@@ -41,11 +46,13 @@ out_pin:right output
 
 @init
 
+ext_tail_size = -1;
+
 // Wiring constants
 WIRING_SAT_EQ = 0;
 WIRING_EQ_SAT = 1;
 
-ext_tail_size = -1;
+compGain = 1;
 
 // EQ & filters
 
@@ -256,8 +263,13 @@ setCoefs();
 
 @slider
 
-// EQ & filters
-setCoefs();
+outputGain = 10 ^ ( outputGainDb / 20 );
+
+// Compressor
+compThreshold = 10 ^ (compThresholdDb / 20);
+compAttack = 10 ^ ((6 * (100  / compAttackSetting) / srate) / 20);
+compRelease = 10 ^ ((6 * (100 / compReleaseSetting ) / srate) / 20);
+
 
 // Saturation
 satGain = 10 ^ (satGainDb / 20);
@@ -265,7 +277,8 @@ satTube = satTubePercent > 0 ?
   (satTubePercent + 6.24) * 0.1186 : // Numbers taken from Tukan's plugin
   1;
 
-outputGain = 10 ^ ( outputGainDb / 20 );
+// EQ & filters
+setCoefs();
 
 @sample
 
@@ -555,9 +568,27 @@ hpFreq > 20 ? (
   valueR = hpYR;
 );
 
-wiring == WIRING_EQ_SAT ? (
-  // Saturation
+// Compressor
 
+compThresholdDb < 0 ? (
+  compMaxSamples = max(abs(valueL), abs(valueR));
+
+  compMaxSamples > compThreshold ?
+      (
+          compSeekGain = (compThreshold + (compMaxSamples - compThreshold) / compRatioSetting) / compMaxSamples;
+      ) : (
+          compSeekGain = 1
+      );
+
+  compGain > compSeekGain ? ( compGain /= compAttack; ) : ( compGain *= compRelease; );
+
+  valueL *= compGain;
+  valueR *= compGain;
+);
+
+// Saturation
+
+wiring == WIRING_EQ_SAT ? (
   // Apply TANH
 
   satGain > 1 ? (
