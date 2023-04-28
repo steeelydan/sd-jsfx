@@ -18,7 +18,7 @@ decibels = 20 * log(abs(amplitude));
 amplitude = 10 ^ (decibels / 20);
 ```
 
-## Inifinite Impulse Response Filter (IIRF)
+## Filters
 
 Tutorial: https://www.youtube.com/live/HexzW0EZal8?t=5523
 
@@ -36,6 +36,20 @@ average = (spl0 + previous) / 2;    // Make amplitude change less steep by avera
 previous = spl0;                    // Save this sample for next round
 spl0 = average;
 ```
+
+### Feed-Forward and Feedback (Pirkle)
+
+- Feed-Forward:
+    - Make some frequencies go to zero: *zero*
+    - Step & impulse responses are smearing
+    - Do not blow up
+    - Are called *Finite Impulse Response* filters (FIR)
+
+- Feedback:
+    - Make some frequencies go to infinity: *pole*
+    - Step and impulse responses overshoot & ring / smear depending on coefs
+    - Can blow up or go unstable
+    - Are called *Infinite Impulse Response* filters (IIR)
 
 ### Biquad Filters
 
@@ -105,14 +119,14 @@ a2 = 1 - alpha / A;
 ```eel
 @sample
 
-y = (b0 / a0) * x
-    + (b1 / a0) * x1
-    + (b2 / a0) * x2
-    - (a1 / a0) * y1
-    - (a2 / a0) * y2;
-
 y2 = y1;
 y1 = y;
+y = (b0 / a0) * x      // Feed-forward
+    + (b1 / a0) * x1
+    + (b2 / a0) * x2
+    - (a1 / a0) * y1   // Feedback
+    - (a2 / a0) * y2;
+
 x2 = x1;
 x1 = x;
 x = spl0;       // The current sample
