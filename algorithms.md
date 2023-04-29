@@ -120,6 +120,7 @@ a2 = 1 - alpha / A;
 ```eel
 @sample
 
+x = spl0;
 y = (b0 / a0) * x       // Feed-forward
     + (b1 / a0) * x1
     + (b2 / a0) * x2
@@ -131,7 +132,6 @@ y2 = y1;
 y1 = y;
 x2 = x1;
 x1 = x;
-x = spl0;       // The current sample
 
 spl0 = y;       // y: Our resulting value
 ```
