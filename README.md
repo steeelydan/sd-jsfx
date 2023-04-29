@@ -3,5 +3,7 @@
 ## Install
 
 Just copy the effects you want into
-- Windows: `<USER_DIR>\AppData\Roaming\REAPER\Effects\<YOUR_DIR>`
-- Mac: `<USER_DIR>/Library/Application Support/REAPER/Effects/<YOUR_DIR>`
+
+-   Windows: `<USER_DIR>\AppData\Roaming\REAPER\Effects\<YOUR_DIR>`
+-   Mac: `<USER_DIR>/Library/Application Support/REAPER/Effects/<YOUR_DIR>`
+-   Linux: `~/.config/REAPER/Effects/<YOUR_DIR>`
