@@ -1,6 +1,6 @@
 // Pirkle p. 352
 
-desc: ds_parabolic_sine
+desc: sd_pirkle_sine
 
 @init
 

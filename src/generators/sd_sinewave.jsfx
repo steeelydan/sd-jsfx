@@ -10,6 +10,6 @@ vol = 10 ^ (volDb / 20);
 
 @sample
 // t = count variable in s
-spl0 = sin(2 * $pi * slider1 * t) * vol;
+spl0 = sin(2 * $pi * freq * t) * vol;
 t += 1 / srate;
 spl1 = spl0;
