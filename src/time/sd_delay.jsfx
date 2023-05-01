@@ -14,12 +14,15 @@ out_pin:Left Out
 out_pin:Right Out
 
 @init
-bufferSize = 1000000;
+DELAY_TYPE_MONO = 0;
+DELAY_TYPE_STEREO = 1;
+
+bufferSize = 400000;
 bufferPosL = 0;
 bufferPosR = bufferSize;
 
 @slider
-type == 0 ? (
+type == DELAY_TYPE_MONO ? (
     lengthMsR = lengthMsL;
 );
 
@@ -30,7 +33,7 @@ feedback = feedbackPercent / 100;
 mix = 2 ^ ( mixDb / 6 );
 
 @sample
-type == 0 ? (
+type == DELAY_TYPE_MONO ? (
     // Mono
     samplesL = bufferPosL;
     samplesR = bufferPosL;
