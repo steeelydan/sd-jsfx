@@ -1,31 +1,35 @@
+/*
+v1.0.0
+
+Based on the W3 specs for EQs: https://www.w3.org/TR/audio-eq-cookbook/
+Based on the tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
+*/
+
 desc:sd_4band_eq
 
-// Based on the W3 specs for EQs: https://www.w3.org/TR/audio-eq-cookbook/
-// Based on the tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
+slider1:hpFreq=20<20, 1050, 1>HPF
+slider2:hpQ=0.5<0.1, 7, 0.01>Q
 
-slider1:lpFreq=22000<3000, 22000, 1>LP Freq
-slider2:lpQ=0.5<0.1, 7, 0.01>Q
+slider4:lpFreq=22000<50, 22000, 1>LPF
+slider5:lpQ=0.5<0.1, 7, 0.01>Q
 
-slider4:hiType=0<0,1,1{Shelf,Peak}>High Type
-slider5:hiFreq=8000 <20, 20000, 1>Freq
-slider6:hiQ=0.5 <0.1, 7, 0.01>Q
-slider7:hiGain=0 <-15, 15, 0.01>Gain (dB)
+slider7:hiType=0<0,1,1{Shelf,Peak}>High Type
+slider8:hiFreq=8000 <20, 20000, 1>Freq
+slider9:hiQ=0.5 <0.1, 7, 0.01>Q
+slider10:hiGain=0 <-15, 15, 0.01>Gain (dB)
 
-slider9:hmFreq=3000<600,7000,1>Hi Mid Freq
-slider10:hmQ=0.5<0.1, 7, 0.01>Q
-slider11:hmGain=0<-15, 15, 0.01>Gain (dB)
+slider12:hmFreq=3000<600,7000,1>Hi Mid Freq
+slider13:hmQ=0.5<0.1, 7, 0.01>Q
+slider14:hmGain=0<-15, 15, 0.01>Gain (dB)
 
-slider13:lmFreq=1000<200,2500,1>Lo Mid Freq
-slider14:lmQ=0.5<0.1, 7, 0.01>Q
-slider15:lmGain=0<-15, 15, 0.01>Gain (dB)
+slider16:lmFreq=1000<200,2500,1>Lo Mid Freq
+slider17:lmQ=0.5<0.1, 7, 0.01>Q
+slider18:lmGain=0<-15, 15, 0.01>Gain (dB)
 
-slider17:loType=0<0,1,1{Shelf,Peak}>Low Type
-slider18:loFreq=200<30,450,1>Freq
-slider19:loQ=0.5<0.1, 7, 0.01>Q
-slider20:loGain=0<-15, 15, 0.01>Gain (dB)
-
-slider22:hpFreq=20<20, 1050, 1>HP Freq
-slider23:hpQ=0.5<0.1, 7, 0.01>Q
+slider20:loType=0<0,1,1{Shelf,Peak}>Low Type
+slider21:loFreq=200<30,450,1>Freq
+slider22:loQ=0.5<0.1, 7, 0.01>Q
+slider23:loGain=0<-15, 15, 0.01>Gain (dB)
 
 slider50:outputGainDb=0<-15, 15, 0.01>Output Gain (dB)
 
