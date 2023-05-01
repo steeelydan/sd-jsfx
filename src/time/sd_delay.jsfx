@@ -2,7 +2,7 @@ desc:sd_delay
 
 // Adapted from Cockos' JSFX Delay
 
-slider1:type=0<0,1,1{Mono,Stereo}>Type
+slider1:type=0<0,2,1{Mono,Stereo,PingPong}>Type
 slider2:lengthMsL=120<0,2000,1>Delay L / Mono (ms)
 slider3:lengthMsR=120<0,2000,1>Delay R (ms)
 slider4:feedbackPercent=0<0,100,0.1>Feedback (%)
@@ -16,6 +16,7 @@ out_pin:Right Out
 @init
 DELAY_TYPE_MONO = 0;
 DELAY_TYPE_STEREO = 1;
+DELAY_TYPE_PINGPONG = 2;
 
 bufferSize = 400000;
 bufferPosL = 0;
@@ -46,8 +47,13 @@ type == DELAY_TYPE_MONO ? (
 bufferValueL = samplesL[0];
 bufferValueR = samplesR[0];
 
-samplesL[0] = min(spl0 + bufferValueL * feedback, 1);
-samplesR[0] = min(spl1 + bufferValueR * feedback, 1);
+type == DELAY_TYPE_PINGPONG ? (
+    samplesR[0] = min(spl0 + bufferValueL * feedback, 1);
+    samplesL[0] = min(spl1 + bufferValueR * feedback, 1);
+) : (
+    samplesL[0] = min(spl0 + bufferValueL * feedback, 1);
+    samplesR[0] = min(spl1 + bufferValueR * feedback, 1);
+);
 
 (bufferPosL += 1) >= numSamplesL ? bufferPosL = 0;
 (bufferPosR += 1) >= bufferSize + numSamplesR ? bufferPosR = bufferSize + 0;
