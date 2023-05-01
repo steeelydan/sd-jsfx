@@ -3,8 +3,8 @@ desc:sd_delay
 // Adapted from Cockos' JSFX Delay
 
 slider1:type=0<0,1,1{Mono,Stereo}>Type
-slider2:lengthMsL=120<0,2000,0.1>Delay L / Mono (ms)
-slider3:lengthMsR=120<0,2000,0.1>Delay R (ms)
+slider2:lengthMsL=120<0,2000,1>Delay L / Mono (ms)
+slider3:lengthMsR=120<0,2000,1>Delay R (ms)
 slider4:feedbackPercent=0<0,100,0.1>Feedback (%)
 slider5:mixDb=-6<-120,6,1>Mix (dB)
 
@@ -14,17 +14,17 @@ out_pin:Left Out
 out_pin:Right Out
 
 @init
+bufferSize = 1000000;
 bufferPosL = 0;
+bufferPosR = bufferSize;
 
 @slider
 type == 0 ? (
     lengthMsR = lengthMsL;
-    numSamplesL = min(lengthMsL * srate / 1000, 500000);
-    numSamplesR = min(lengthMsL * srate / 1000, 500000);
-) : (
-    numSamplesL = min(lengthMsL * srate / 1000, 500000);
-    numSamplesR = min(lengthMsR * srate / 1000, 500000);
 );
+
+numSamplesL = lengthMsL * srate / 1000;
+numSamplesR = lengthMsR * srate / 1000;
 
 feedback = feedbackPercent / 100;
 mix = 2 ^ ( mixDb / 6 );
@@ -32,12 +32,12 @@ mix = 2 ^ ( mixDb / 6 );
 @sample
 type == 0 ? (
     // Mono
-    samplesL = bufferPosL * 2;
-    samplesR = bufferPosL * 2;
+    samplesL = bufferPosL;
+    samplesR = bufferPosL;
 ) : (
     // Stereo
-    samplesL = bufferPosL * 2;
-    samplesR = bufferPosR * 2;
+    samplesL = bufferPosL;
+    samplesR = bufferSize + bufferPosR;
 );
 
 bufferValueL = samplesL[0];
@@ -47,7 +47,7 @@ samplesL[0] = min(spl0 + bufferValueL * feedback, 1);
 samplesR[0] = min(spl1 + bufferValueR * feedback, 1);
 
 (bufferPosL += 1) >= numSamplesL ? bufferPosL = 0;
-(bufferPosR += 1) >= numSamplesR ? bufferPosR = 0;
+(bufferPosR += 1) >= bufferSize + numSamplesR ? bufferPosR = bufferSize + 0;
 
 spl0 = spl0 + bufferValueL * mix;
 spl1 = spl1 + bufferValueR * mix;
