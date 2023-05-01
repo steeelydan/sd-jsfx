@@ -1,0 +1,33 @@
+desc:sd_delay
+
+// Adapted from Cockos' JSFX Delay
+
+slider1:lengthMs=120<0,4000,0.1>Delay (ms)
+slider2:feedbackPercent=0<0,100,0.1>Feedback (%)
+slider3:mixDb=-6<-120,6,1>Mix (dB)
+
+in_pin:Left In
+in_pin:Right In
+out_pin:Left Out
+out_pin:Right Out
+
+@init
+bufferPos = 0;
+
+@slider
+numSamples = min(lengthMs * srate / 1000, 500000);
+feedback = feedbackPercent / 100;
+mix = 2 ^ ( mixDb / 6 );
+
+@sample
+samples = bufferPos * 2;
+bufferValueL=samples[0];
+bufferValueR=samples[1];
+
+samples[0] = min(spl0 + bufferValueL * feedback, 1);
+samples[1] = min(spl1 + bufferValueR * feedback, 1);
+
+(bufferPos += 1) >= numSamples ? bufferPos = 0;
+
+spl0 = spl0 + bufferValueL * mix;
+spl1 = spl1 + bufferValueR * mix;
