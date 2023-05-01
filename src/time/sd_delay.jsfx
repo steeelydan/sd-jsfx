@@ -1,6 +1,10 @@
-desc:sd_delay
+/*
+v1.0.0
 
-// Adapted from Cockos' JSFX Delay
+Adapted from Cockos' JSFX Delay
+*/
+
+desc:sd_delay
 
 slider1:type=0<0,2,1{Mono,Stereo,PingPong}>Type
 slider2:lengthMsL=120<0,2000,1>Delay L / Mono (ms)

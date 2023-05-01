@@ -1,10 +1,12 @@
-desc:sd_channelstrip
-
 /*
+v1.0.0
+
 EQ & filter parts from sd_4band_eq
 Saturation from sd_saturation
 Compressor from sd_compressor
 */
+
+desc:sd_channelstrip
 
 slider1:hpFreq=20<20, 1050, 1>HPF
 slider2:hpQ=0.5<0.1, 7, 0.01>Q
