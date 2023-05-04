@@ -2,7 +2,7 @@
 v1.0.0
 
 An old-school Schroeder reverb.
-Turn down the APF gain to get the super grainy stuff.
+Turn down the diffusion to get the super grainy stuff.
 Default numbers taken from fendoap ,: https://www.youtube.com/watch?v=OwDX14L8lpY
 */
 
@@ -38,10 +38,14 @@ comb4Buffer = 3 * combBufferSize;
 
 apfBufferSize = 4000;
 apfBufferStart = 4 * combBufferSize;
-apf1BufferL = apfBufferStart;
-apf1BufferR = apfBufferStart + apfBufferSize;
-apf2BufferL = apfBufferStart + 2 * apfBufferSize;
-apf2BufferR = apfBufferStart + 3 * apfBufferSize;
+apf1FFBufferL = apfBufferStart;
+apf1FFBufferR = apfBufferStart + apfBufferSize;
+apf1FBBufferL = apfBufferStart + 2 * apfBufferSize;
+apf1FBBufferR = apfBufferStart + 3 * apfBufferSize;
+apf2FFBufferL = apfBufferStart + 4 * apfBufferSize;
+apf2FFBufferR = apfBufferStart + 5 * apfBufferSize;
+apf2FBBufferL = apfBufferStart + 6 * apfBufferSize;
+apf2FBBufferR = apfBufferStart + 7 * apfBufferSize;
 
 @slider
 
@@ -99,29 +103,42 @@ wetR = (comb2 + comb4) / 2;
 apf1Index = apfWriteIndex - apf1Samples;
 apf1Index < 0 ? apf1Index += apfBufferSize;
 
-apf1L = apf1BufferL[apf1Index];
-apf1R = apf1BufferR[apf1Index];
+apfFF1L = apf1FFBufferL[apf1Index];
+apfFF1R = apf1FFBufferR[apf1Index];
+apfFB1L = apf1FBBufferL[apf1Index];
+apfFB1R = apf1FBBufferR[apf1Index];
 
-apf1BufferL[apfWriteIndex] = wetL + apf1L * apfGain;
-apf1BufferR[apfWriteIndex] = wetR + apf1R * apfGain;
+apf1FFBufferL[apfWriteIndex] = wetL;
+apf1FFBufferR[apfWriteIndex] = wetR;
 
-wetL = apf1L - apfGain * wetL + apf1L * apfGain;
-wetR = apf1R - apfGain * wetR + apf1R * apfGain;
+apf1WetL = apfGain * wetL + apfFF1L - apfGain * apfFB1L;
+apf1WetR = apfGain * wetR + apfFF1R - apfGain * apfFB1R;
+
+apf1FBBufferL[apfWriteIndex] = apf1WetL;
+apf1FBBufferR[apfWriteIndex] = apf1WetR;
+
+wetL = apf1WetL;
+wetR = apf1WetR;
 
 apf2Index = apfWriteIndex - apf2Samples;
 apf2Index < 0 ? apf2Index += apfBufferSize;
 
-apf2L = apf2BufferL[apf2Index];
-apf2R = apf2BufferR[apf2Index];
+apfFF2L = apf2FFBufferL[apf2Index];
+apfFF2R = apf2FFBufferR[apf2Index];
+apfFB2L = apf2FBBufferL[apf2Index];
+apfFB2R = apf2FBBufferR[apf2Index];
 
-apf2BufferL[apfWriteIndex] = wetL + apf2L * apfGain;
-apf2BufferR[apfWriteIndex] = wetR + apf2R * apfGain;
+apf2FFBufferL[apfWriteIndex] = wetL;
+apf2FFBufferR[apfWriteIndex] = wetR;
 
-wetL = apf2L - apfGain * wetL + apf2L * apfGain;
-wetR = apf2R - apfGain * wetR + apf2R * apfGain;
+apf2WetL = apfGain * wetL + apfFF2L - apfGain * apfFB2L;
+apf2WetR = apfGain * wetR + apfFF2R - apfGain * apfFB2R;
 
-wetL *= 0.5;
-wetR *= 0.5;
+apf2FBBufferL[apfWriteIndex] = apf2WetL;
+apf2FBBufferR[apfWriteIndex] = apf2WetR;
+
+wetL = apf2WetL;
+wetR = apf2WetR;
 
 apfWriteIndex += 1;
 apfWriteIndex >= apfBufferSize ? apfWriteIndex = 0;
