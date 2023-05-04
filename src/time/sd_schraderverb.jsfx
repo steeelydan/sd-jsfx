@@ -16,20 +16,18 @@ out_pin:Right Out
 // Decay = 4.2s
 slider1:combFeedback=0.941<0,0.99,0.001>Length
 slider2:size=18.74<3, 50, 0.01>Size (m)
-slider3:apfGain=0.5<0,0.8,0.001>Diffusion
+slider3:apfGain=0.5<0, 0.8, 0.001>Diffusion
+slider5:combSizeFactor=1.96<0.5, 4, 0.01>Comb/size
+slider6:comb2Factor=1.32<0.5, 4, 0.01>Comb2/Comb1
+slider7:comb3Factor=1.2<0.5, 4, 0.01>Comb3/Comb1
+slider8:comb4Factor=1.11<0.5, 4, 0.01>Comb4/Comb1
+slider10:apfSizeFactor=0.333<0.1, 1, 0.001>APF/size
+slider11:apf2Factor=0.346<0.1, 1, 0.001>APF2/APF1
 slider50:mixDry=1<0,1,0.01>Dry
 slider51:mixWet=0.33<0,1,0.01>Wet
 slider52:volume=1<0,1.5,0.01>Out Volume
 
 @init
-
-COMB_SIZE_FACTOR = 1.96;
-COMB_2_FACTOR = 1.32;
-COMB_3_FACTOR = 1.2;
-COMB_4_FACTOR = 1.11;
-
-APF_SIZE_FACTOR = 0.333;
-APF_2_FACTOR = 0.346;
 
 combBufferSize = 20000;
 
@@ -47,19 +45,19 @@ apf2BufferR = apfBufferStart + 3 * apfBufferSize;
 
 @slider
 
-comb1Ms = size * COMB_SIZE_FACTOR;
-comb2Ms = size * COMB_SIZE_FACTOR * COMB_2_FACTOR;
-comb3Ms = size * COMB_SIZE_FACTOR * COMB_3_FACTOR;
-comb4Ms = size * COMB_SIZE_FACTOR * COMB_4_FACTOR;
+comb1Ms = size * combSizeFactor;
+comb2Ms = size * combSizeFactor * comb2Factor;
+comb3Ms = size * combSizeFactor * comb3Factor;
+comb4Ms = size * combSizeFactor * comb4Factor;
 
 comb1Samples = comb1Ms * srate / 1000;
 comb2Samples = comb2Ms * srate / 1000;
 comb3Samples = comb3Ms * srate / 1000;
 comb4Samples = comb4Ms * srate / 1000;
 
-apf1Ms = size * APF_SIZE_FACTOR;
+apf1Ms = size * apfSizeFactor;
 apf1Samples = apf1Ms * srate / 1000;
-apf2Ms = size * APF_SIZE_FACTOR * APF_2_FACTOR;
+apf2Ms = size * apfSizeFactor * apf2Factor;
 apf2Samples = apf2Ms * srate / 1000;
 
 @sample
