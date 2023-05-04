@@ -14,12 +14,12 @@ out_pin:Left Out
 out_pin:Right Out
 
 // Decay = 4.2s
-slider1:combFeedback=0.941<0,0.99,0.001>Comb Feedback
-slider2:apfGain=0.5<0,0.8,0.001>APF Gain
-slider3:size=18.74<3, 50, 0.01>Size (m)
-slider4:mixDry=1<0,1,0.01>Dry
-slider5:mixWet=0.33<0,1,0.01>Wet
-slider6:volume=1<0,1.5,0.01>Out Volume
+slider1:combFeedback=0.941<0,0.99,0.001>Length
+slider2:size=18.74<3, 50, 0.01>Size (m)
+slider3:apfGain=0.5<0,0.8,0.001>Diffusion
+slider50:mixDry=1<0,1,0.01>Dry
+slider51:mixWet=0.33<0,1,0.01>Wet
+slider52:volume=1<0,1.5,0.01>Out Volume
 
 @init
 
