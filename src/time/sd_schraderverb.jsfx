@@ -15,11 +15,21 @@ out_pin:Right Out
 
 // Decay = 4.2s
 slider1:combFeedback=0.941<0,0.99,0.001>Comb Feedback
-slider2:apfGain=0.5<0,0.99,0.001>APF Gain
-slider3:mixDry=1<0,1,0.01>Dry
-slider4:mixWet=0.33<0,1,0.01>Wet
+slider2:apfGain=0.5<0,0.8,0.001>APF Gain
+slider3:size=18.74<3, 50, 0.01>Size (m)
+slider4:mixDry=1<0,1,0.01>Dry
+slider5:mixWet=0.33<0,1,0.01>Wet
+slider6:volume=1<0,1.5,0.01>Out Volume
 
 @init
+
+COMB_SIZE_FACTOR = 1.96;
+COMB_2_FACTOR = 1.32;
+COMB_3_FACTOR = 1.2;
+COMB_4_FACTOR = 1.11;
+
+APF_SIZE_FACTOR = 0.333;
+APF_2_FACTOR = 0.346;
 
 combBufferSize = 20000;
 
@@ -28,16 +38,6 @@ comb2Buffer = 1 * combBufferSize;
 comb3Buffer = 2 * combBufferSize;
 comb4Buffer = 3 * combBufferSize;
 
-// 18,74m
-comb1Ms = 36.7;
-comb2Ms = 48.6;
-comb3Ms = 44;
-comb4Ms = 40.6;
-comb1Samples = comb1Ms * srate / 1000;
-comb2Samples = comb2Ms * srate / 1000;
-comb3Samples = comb3Ms * srate / 1000;
-comb4Samples = comb4Ms * srate / 1000;
-
 apfBufferSize = 4000;
 apfBufferStart = 4 * combBufferSize;
 apf1BufferL = apfBufferStart;
@@ -45,12 +45,22 @@ apf1BufferR = apfBufferStart + apfBufferSize;
 apf2BufferL = apfBufferStart + 2 * apfBufferSize;
 apf2BufferR = apfBufferStart + 3 * apfBufferSize;
 
-apf1Ms = 6.12;
-apf1Samples = apf1Ms * srate / 1000;
-apf2Ms = 2.12;
-apf2Samples = apf2Ms * srate / 1000;
-
 @slider
+
+comb1Ms = size * COMB_SIZE_FACTOR;
+comb2Ms = size * COMB_SIZE_FACTOR * COMB_2_FACTOR;
+comb3Ms = size * COMB_SIZE_FACTOR * COMB_3_FACTOR;
+comb4Ms = size * COMB_SIZE_FACTOR * COMB_4_FACTOR;
+
+comb1Samples = comb1Ms * srate / 1000;
+comb2Samples = comb2Ms * srate / 1000;
+comb3Samples = comb3Ms * srate / 1000;
+comb4Samples = comb4Ms * srate / 1000;
+
+apf1Ms = size * APF_SIZE_FACTOR;
+apf1Samples = apf1Ms * srate / 1000;
+apf2Ms = size * APF_SIZE_FACTOR * APF_2_FACTOR;
+apf2Samples = apf2Ms * srate / 1000;
 
 @sample
 
@@ -118,5 +128,5 @@ wetR *= 0.5;
 apfWriteIndex += 1;
 apfWriteIndex >= apfBufferSize ? apfWriteIndex = 0;
 
-spl0 = mixDry * dryL + mixWet * wetL;
-spl1 = mixDry * dryR + mixWet * wetR;
+spl0 = (mixDry * dryL + mixWet * wetL) * volume;
+spl1 = (mixDry * dryR + mixWet * wetR) * volume;
