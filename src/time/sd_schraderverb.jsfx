@@ -3,7 +3,6 @@ v1.0.0
 
 An old-school Schroeder reverb.
 Turn down the diffusion to get the super grainy stuff.
-Default numbers taken from fendoap ,: https://www.youtube.com/watch?v=OwDX14L8lpY
 */
 
 desc:sd_schraderverb
@@ -16,13 +15,13 @@ out_pin:Right Out
 // Decay = 4.2s
 slider1:combFeedback=0.941<0,0.99,0.001>Length
 slider2:size=18.74<3, 50, 0.01>Size (m)
-slider3:apfGain=0.5<0, 0.8, 0.001>Diffusion
+slider3:apfGain=0.6<0, 1, 0.001>Diffusion
 slider5:combSizeFactor=1.96<0.5, 4, 0.01>Comb/size
-slider6:comb2Factor=1.32<0.5, 4, 0.01>Comb2/Comb1
-slider7:comb3Factor=1.2<0.5, 4, 0.01>Comb3/Comb1
-slider8:comb4Factor=1.11<0.5, 4, 0.01>Comb4/Comb1
-slider10:apfSizeFactor=0.333<0.1, 1, 0.001>APF/size
-slider11:apf2Factor=0.346<0.1, 1, 0.001>APF2/APF1
+slider6:comb2Factor=1.556<0.5, 4, 0.001>Comb2/Comb1
+slider7:comb3Factor=1.341<0.5, 4, 0.001>Comb3/Comb1
+slider8:comb4Factor=1.082<0.5, 4, 0.001>Comb4/Comb1
+slider10:apfSizeFactor=0.663<0.1, 1, 0.001>APF/size
+slider11:apf2Factor=0.312<0.1, 1, 0.001>APF2/APF1
 slider50:mixDry=1<0,1,0.01>Dry
 slider51:mixWet=0.33<0,1,0.01>Wet
 slider52:volume=1<0,1.5,0.01>Out Volume
@@ -95,8 +94,8 @@ combWriteIndex += 1;
 combWriteIndex >= combBufferSize ? combWriteIndex = 0;
 
 // Sum; some shuffling
-wetL = (comb1 + comb3) / 2;
-wetR = (comb2 + comb4) / 2;
+wetL = (dryL + comb1 + dryL + comb3) / 2;
+wetR = (dryR + comb2 + dryR + comb4) / 2;
 
 // Allpass Filters
 
