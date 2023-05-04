@@ -1,0 +1,122 @@
+/*
+v1.0.0
+
+An old-school Schroeder reverb.
+Turn down the APF gain to get the super grainy stuff.
+Default numbers taken from fendoap ,: https://www.youtube.com/watch?v=OwDX14L8lpY
+*/
+
+desc:sd_schraderverb
+
+in_pin:Left In
+in_pin:Right In
+out_pin:Left Out
+out_pin:Right Out
+
+// Decay = 4.2s
+slider1:combFeedback=0.941<0,0.99,0.001>Comb Feedback
+slider2:apfGain=0.5<0,0.99,0.001>APF Gain
+slider3:mixDry=1<0,1,0.01>Dry
+slider4:mixWet=0.33<0,1,0.01>Wet
+
+@init
+
+combBufferSize = 20000;
+
+comb1Buffer = 0;
+comb2Buffer = 1 * combBufferSize;
+comb3Buffer = 2 * combBufferSize;
+comb4Buffer = 3 * combBufferSize;
+
+// 18,74m
+comb1Ms = 36.7;
+comb2Ms = 48.6;
+comb3Ms = 44;
+comb4Ms = 40.6;
+comb1Samples = comb1Ms * srate / 1000;
+comb2Samples = comb2Ms * srate / 1000;
+comb3Samples = comb3Ms * srate / 1000;
+comb4Samples = comb4Ms * srate / 1000;
+
+apfBufferSize = 4000;
+apfBufferStart = 4 * combBufferSize;
+apf1BufferL = apfBufferStart;
+apf1BufferR = apfBufferStart + apfBufferSize;
+apf2BufferL = apfBufferStart + 2 * apfBufferSize;
+apf2BufferR = apfBufferStart + 3 * apfBufferSize;
+
+apf1Ms = 6.12;
+apf1Samples = apf1Ms * srate / 1000;
+apf2Ms = 2.12;
+apf2Samples = apf2Ms * srate / 1000;
+
+@slider
+
+@sample
+
+dryL = spl0;
+dryR = spl1;
+
+// Comb Filters
+
+comb1Index = combWriteIndex - comb1Samples;
+comb2Index = combWriteIndex - comb2Samples;
+comb3Index = combWriteIndex - comb3Samples;
+comb4Index = combWriteIndex - comb4Samples;
+
+comb1Index < 0 ? comb1Index += combBufferSize;
+comb2Index < 0 ? comb2Index += combBufferSize;
+comb3Index < 0 ? comb3Index += combBufferSize;
+comb4Index < 0 ? comb4Index += combBufferSize;
+
+comb1 = comb1Buffer[comb1Index];
+comb2 = comb2Buffer[comb2Index];
+comb3 = comb3Buffer[comb3Index];
+comb4 = comb4Buffer[comb4Index];
+
+comb1Buffer[combWriteIndex] = dryL + comb1 * combFeedback;
+comb2Buffer[combWriteIndex] = dryL + comb2 * combFeedback;
+comb3Buffer[combWriteIndex] = dryR + comb3 * combFeedback;
+comb4Buffer[combWriteIndex] = dryR + comb4 * combFeedback;
+
+combWriteIndex += 1;
+combWriteIndex >= combBufferSize ? combWriteIndex = 0;
+
+// Sum; some shuffling
+wetL = (comb1 + comb3) / 2;
+wetR = (comb2 + comb4) / 2;
+
+// Allpass Filters
+
+apf1Index = apfWriteIndex - apf1Samples;
+apf1Index < 0 ? apf1Index += apfBufferSize;
+
+apf1L = apf1BufferL[apf1Index];
+apf1R = apf1BufferR[apf1Index];
+
+apf1BufferL[apfWriteIndex] = wetL + apf1L * apfGain;
+apf1BufferR[apfWriteIndex] = wetR + apf1R * apfGain;
+
+wetL = apf1L - apfGain * wetL + apf1L * apfGain;
+wetR = apf1R - apfGain * wetR + apf1R * apfGain;
+
+apf2Index = apfWriteIndex - apf2Samples;
+apf2Index < 0 ? apf2Index += apfBufferSize;
+
+apf2L = apf2BufferL[apf2Index];
+apf2R = apf2BufferR[apf2Index];
+
+apf2BufferL[apfWriteIndex] = wetL + apf2L * apfGain;
+apf2BufferR[apfWriteIndex] = wetR + apf2R * apfGain;
+
+wetL = apf2L - apfGain * wetL + apf2L * apfGain;
+wetR = apf2R - apfGain * wetR + apf2R * apfGain;
+
+wetL *= 0.5;
+wetR *= 0.5;
+
+apfWriteIndex += 1;
+apfWriteIndex >= apfBufferSize ? apfWriteIndex = 0;
+
+spl0 = mixDry * dryL + mixWet * wetL;
+spl1 = mixDry * dryR + mixWet * wetR;

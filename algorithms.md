@@ -115,7 +115,7 @@ a1 = -2 * cosOmega;
 a2 = 1 - alpha / A;
 ```
 
-#### The Transfer Function
+#### The Difference Equation
 
 ```eel
 @sample
