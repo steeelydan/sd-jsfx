@@ -1,3 +1,7 @@
+/*
+    Simplest design, only useful for learning
+*/
+
 desc:sd_highpass_filter
 
 @sample

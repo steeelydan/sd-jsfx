@@ -1,3 +1,8 @@
+/*
+v1.0.0
+Creates an impulse followed by nothing.
+*/
+
 desc:sd_impulse
 
 @sample

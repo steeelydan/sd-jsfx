@@ -1,6 +1,10 @@
+/*
+v0.0.1
+https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+*/
+
 desc:sd_pitch_shifter
 
-// https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
 
 slider1: pitch=1<0.0833333333, 5, 0.0833333333>Pitch (st)
 

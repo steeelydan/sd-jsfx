@@ -1,6 +1,10 @@
+/*
+v0.0.1
+Adapted from https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
+*/
+
 desc:sd_drum_machine
 
-// Adapted from https://wiki.cockos.com/wiki/index.php/1st_Ever_Jesusonic_Tutorial
 
 @init
 maxPoly = 2;

@@ -1,3 +1,7 @@
+/*
+v1.0.0
+*/
+
 desc:sd_level
 
 slider1:gain=0 < -18 , 18 , 0.1 >Gain [dB]

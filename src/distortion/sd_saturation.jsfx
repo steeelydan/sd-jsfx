@@ -1,7 +1,10 @@
-desc:sd_saturation
+/*
+v1.0.0
+Adapted (mostly copied) from Tukan's PreAmp (v. 1.1)
+https://github.com/TukanStudios/TUKAN_STUDIOS_PLUGINS
+*/
 
-// Adapted (mostly copied) from Tukan's PreAmp (v. 1.1)
-// https://github.com/TukanStudios/TUKAN_STUDIOS_PLUGINS
+desc:sd_saturation
 
 slider1:0<0,24,0.1>Input (dB)
 slider2:tubeAmount=5<0,100,0.1>Tube (%)

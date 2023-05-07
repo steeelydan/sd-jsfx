@@ -1,7 +1,11 @@
+/*
+    Only useful for learning
+    https://www.youtube.com/watch?v=WR8PtyfLAVc
+    Inifinite Impulse Response filter (IIRF)
+*/
+
 desc:sd_bandpass_filter
 
-// https://www.youtube.com/watch?v=WR8PtyfLAVc
-// Inifinite Impulse Response filter (IIRF)
 
 slider1: 1 <0, 1, 0.01> Previous vs. current
 

@@ -1,6 +1,10 @@
+/*
+v1.0.0
+Tutorial: https://www.youtube.com/watch?v=eKnQrbEkZhI
+*/
+
 desc:sd_bitcrusher
 
-// Tutorial: https://www.youtube.com/watch?v=eKnQrbEkZhI
 
 slider1:bits=8<1,16,1>Bits
 

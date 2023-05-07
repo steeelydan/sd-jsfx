@@ -1,6 +1,9 @@
-desc:sd_empty
+/*
+v1.0.0
+Does nothing. Only exists to measure JSFX environment overhead.
+*/
 
-// Does nothing. Only exists to measure JSFX environment overhead.
+desc:sd_empty
 
 slider1:someSlider=0<1,2,1>Useless slider
 

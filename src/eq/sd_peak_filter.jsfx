@@ -1,9 +1,11 @@
-desc:sd_peak_filter
-
 /*
+For a practical implementation see sd_4band_eq
 Tutorial: https://www.youtube.com/watch?v=WR8PtyfLAVc
 Specification: https://www.w3.org/TR/audio-eq-cookbook/
 */
+
+desc:sd_peak_filter
+
 
 slider1:freq=300 <20, 20000, 1>Freq [Hz]
 slider2:q=1 <0.1, 7, 0.01>Q

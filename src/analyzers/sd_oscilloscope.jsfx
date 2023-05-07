@@ -1,6 +1,10 @@
+/*
+v1.0.0
+Tutorial: https://www.youtube.com/watch?v=dJnABqy_kB0
+*/
+
 desc:sd_oscilloscope
 
-// https://www.youtube.com/watch?v=dJnABqy_kB0
 
 slider1:hold=0<0,1,1{Off,On}>Hold
 // x6
