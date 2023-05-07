@@ -1,9 +1,9 @@
 /*
-v1.0.0
+v1.1.0
 
 EQ & filter parts from sd_4band_eq
 Saturation from sd_saturation
-Compressor from sd_compressor
+Compressor from sd_compressor_2
 */
 
 desc:sd_channelstrip
@@ -35,12 +35,15 @@ slider23:loGain=0<-15, 15, 0.01>Gain (dB)
 slider25:satGainDb=0<0,24,0.1>Saturation (dB)
 slider26:satTubePercent=0<0,100,0.1>Tube (%)
 
-slider28:compThresholdDb=0 <-72, 0, 0.1>Threshold [dB]
-slider29:compRatioSetting=2 <1, 10, 0.01>Ratio
-slider30:compAttackSetting=5 <0.01, 50, 0.01>Attack [ms]
-slider31:compReleaseSetting=50 <1, 500, 1>Release [ms]
+slider28:compThresholdDb=0<-60, 0, 0.01>Threshold (dB)
+slider29:compRatioSetting=4<0.1, 20, 0.1>Ratio (x:1)
+slider30:compAttackMs=10<0.001, 100, 0.01>Attack (ms)
+slider31:compReleaseMs=200<20, 1500, 0.01>Release (ms)
+slider32:compRmsWindowMs=5<0,150,0.01>RMS Window (ms)
+slider33:compMakeupDb=0<-24,24,0.1>Makeup Gain (dB)
+slider34:compMixPercent=100<0,100,0.1>Mix (%)
 
-slider33:layout=0<0,1,1{sat - eq - cmp,eq - cmp - sat}>Layout
+slider36:layout=0<0,1,1{sat - eq - cmp,eq - cmp - sat}>Layout
 
 slider50:outputGainDb=0<-20, 20, 0.01>Output Gain (dB)
 
@@ -53,11 +56,13 @@ out_pin:right output
 
 ext_tail_size = -1;
 
+// Audio constants
+LOG_CONSTANT = 8.6858896380650365530225783783321; // https://forum.cockos.com/showpost.php?p=2518899&postcount=11
+ANALOG_TIME_CONSTANT = -1; // ~ ln(0.368), Pirkle p. 360
+
 // Wiring constants
 WIRING_SAT_EQ_CMP = 0;
 WIRING_EQ_CMP_SAT = 1;
-
-compGain = 1;
 
 // EQ & filters
 
@@ -271,10 +276,13 @@ setCoefs();
 outputGain = 10 ^ ( outputGainDb / 20 );
 
 // Compressor
-compThreshold = 10 ^ (compThresholdDb / 20);
-compAttack = 10 ^ ((6 * (100  / compAttackSetting) / srate) / 20);
-compRelease = 10 ^ ((6 * (100 / compReleaseSetting ) / srate) / 20);
-
+compCoeffAttack = exp(ANALOG_TIME_CONSTANT / (compAttackMs * 0.001  * srate)); // TC / e ^ (f * time * 0.001), Pirkle p. 361
+compCoeffRelease = exp(ANALOG_TIME_CONSTANT / (compReleaseMs * 0.001 * srate));
+compCoeffRms = compRmsWindowMs > 0 ? exp(ANALOG_TIME_CONSTANT / (compRmsWindowMs * 0.001 * srate)) : 0;
+compRatio = 1 / compRatioSetting;
+compSlope = 1 - compRatio;
+compMakeup = 10 ^ ( compMakeupDb / 20 );
+compMix = compMixPercent / 100;
 
 // Saturation
 satGain = 10 ^ (satGainDb / 20);
@@ -576,19 +584,47 @@ hpFreq > 20 ? (
 // Compressor
 
 compThresholdDb < 0 ? (
-  compMaxSamples = max(abs(valueL), abs(valueR));
+  // Detector (RMS), channels 100% linked
+  compKey = sqrt(sqr(abs(spl0)) + sqr(abs(spl1)));
 
-  compMaxSamples > compThreshold ?
-      (
-          compSeekGain = (compThreshold + (compMaxSamples - compThreshold) / compRatioSetting) / compMaxSamples;
-      ) : (
-          compSeekGain = 1
-      );
+  compCoeffRms > 0 ? (
+    lastRmsEnv = compKey * compKey + compCoeffRms * (lastRmsEnv - compKey * compKey);
+    compKey = sqrt(lastRmsEnv);
+  ) : (
+    lastRmsEnv = compKey * compKey;
+  );
 
-  compGain > compSeekGain ? ( compGain /= compAttack; ) : ( compGain *= compRelease; );
 
-  valueL *= compGain;
-  valueR *= compGain;
+  // Left
+
+  keyDbL = LOG_CONSTANT * log(compKey);
+  changeDbL = lastEnvDbL - keyDbL;
+
+  keyDbL > lastEnvDbL ? (
+    lastEnvDbL = keyDbL + compCoeffAttack * changeDbL;
+  ) : (
+    lastEnvDbL = keyDbL + compCoeffRelease * changeDbL;
+  );
+
+  controlVectorDbL = min(0.0, compSlope * (compThresholdDb - lastEnvDbL));
+  controlVectorL = 10 ^ (controlVectorDbL / 20);
+
+  // Right
+
+  keyDbR = LOG_CONSTANT * log(compKey);
+  changeDbR = lastEnvDbR - keyDbR;
+
+  keyDbR > lastEnvDbR ? (
+    lastEnvDbR = keyDbR + compCoeffAttack * changeDbR;
+  ) : (
+    lastEnvDbR = keyDbR + compCoeffRelease * changeDbR;
+  );
+
+  controlVectorDbR = min(0.0, compSlope * (compThresholdDb - lastEnvDbR));
+  controlVectorR = 10 ^ (controlVectorDbR / 20);
+
+  valueL = (1 - compMix) * valueL + valueL * controlVectorL * compMix * compMakeup;
+  valueR = (1 - compMix) * valueR + valueR * controlVectorR * compMix * compMakeup;
 );
 
 // Saturation
