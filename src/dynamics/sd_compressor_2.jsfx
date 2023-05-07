@@ -22,7 +22,7 @@ slider3: thresholdDb=0<-60, 0, 0.01>Threshold (dB)
 slider4: ratioSetting=4<0.1, 20, 0.1>Ratio (x:1)
 slider5: attackMs=10<0.001, 100, 0.01>Attack (ms)
 slider6: releaseMs=200<20, 1500, 0.01>Release (ms)
-slider8: rmsWindowMs=0<0,150,0.01>RMS Window (ms)
+slider8: rmsWindowMs=5<0,150,0.01>RMS Window (ms)
 slider14:outputGainDb=0<-12, 12, 0.01>Output Gain (dB)
 
 @init
