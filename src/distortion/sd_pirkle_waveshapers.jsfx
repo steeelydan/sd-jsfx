@@ -3,7 +3,7 @@ v1.0.0
 Pirkle, Designing Audio Effect Plugins 2nd ed., p. 548
 */
 
-desc:sd_pirkle_saturation
+desc:sd_pirkle_waveshapers
 
 slider1:gainInDb=0<0, 36, 0.01>Gain In (dB)
 slider2:algorithm=0<0,15,1{Soft Clip: Arraya,Soft Clip: Sigmoid,Soft Clip: Sigmoid2,Soft Clip: Hyperbolic Tangent,Soft Clip: Arctangent,Soft Clip: Fuzz Exponential,DANGER Fuzz Exponential 2,Exponential 2,Arctangent Square Root,Square Sign,Cube,Hard Clipper,Half Wave Rectifier,Full Wave Rectifier,Square Law,Absolute Square Root}>Algorithm
