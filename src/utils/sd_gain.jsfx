@@ -2,9 +2,9 @@
 v1.0.0
 */
 
-desc:sd_level
+desc:sd_gain
 
-slider1:gain=0 < -18 , 18 , 0.1 >Gain [dB]
+slider1:gain=0 < -24 , 24 , 0.1 >Gain [dB]
 
 @slider
 target = 10 ^ ( gain / 20 );
